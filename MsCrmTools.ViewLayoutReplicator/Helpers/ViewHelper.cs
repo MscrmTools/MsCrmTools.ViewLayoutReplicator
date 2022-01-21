@@ -47,12 +47,6 @@ namespace MsCrmTools.ViewLayoutReplicator.Helpers
                 {
                     if (targetView.Id != sourceView.Id)
                     {
-                        if (sourceView.LayoutXml.Contains(".") && targetView.Type == VIEW_ASSOCIATED)
-                        {
-                            errors.Add(new Tuple<string, string>(targetView.Name, "The associated view has not been updated because of related attributes"));
-                            continue;
-                        }
-
                         #region Replace target view cells by source view cells
 
                         // Update grid cells
