@@ -36,7 +36,7 @@ namespace MsCrmTools.ViewLayoutReplicator.Helpers
         /// <param name="includeSorting">Indicates if sorting must be included in replication operation</param>
         /// <param name="service">Crm organization service</param>
         /// <returns>Indicates if all views have been updated</returns>
-        public static List<Tuple<string, string>> PropagateLayout(ViewDefinition sourceView, List<ViewDefinition> targetViews, bool includeSorting, IOrganizationService service)
+        public static List<Tuple<string, string>> PropagateLayout(ViewDefinition sourceView, List<ViewDefinition> targetViews, bool includeLayout, bool includeSorting, IOrganizationService service)
         {
             var errors = new List<Tuple<string, string>>();
             string multiObjectAttribute = string.Empty;
@@ -53,36 +53,37 @@ namespace MsCrmTools.ViewLayoutReplicator.Helpers
                         XmlDocument targetLayout = new XmlDocument();
                         targetLayout.LoadXml(targetView.LayoutXml);
 
-                        XmlAttribute multiAttr = targetLayout.SelectSingleNode("grid/row").Attributes["multiobjectidfield"];
-                        if (multiAttr != null)
-                            multiObjectAttribute = multiAttr.Value;
-
-                        // We empty the existing cells
-                        for (int i = targetLayout.SelectSingleNode("grid/row").ChildNodes.Count; i > 0; i--)
-                        {
-                            XmlNode toDelete = targetLayout.SelectSingleNode("grid/row").ChildNodes[i - 1];
-                            targetLayout.SelectSingleNode("grid/row").RemoveChild(toDelete);
-                        }
-
                         XmlDocument sourceLayout = new XmlDocument();
                         sourceLayout.LoadXml(sourceView.LayoutXml);
-
                         XmlNodeList sourceCellNodes = sourceLayout.SelectNodes("grid/row/cell");
-
                         var cells = new List<string>();
 
-                        foreach (XmlNode cellNode in sourceCellNodes)
+                        if (includeLayout)
                         {
-                            if (!cellNode.Attributes["name"].Value.Contains(".") || targetView.Type != VIEW_ASSOCIATED)
+                            XmlAttribute multiAttr = targetLayout.SelectSingleNode("grid/row").Attributes["multiobjectidfield"];
+                            if (multiAttr != null)
+                                multiObjectAttribute = multiAttr.Value;
+
+                            // We empty the existing cells
+                            for (int i = targetLayout.SelectSingleNode("grid/row").ChildNodes.Count; i > 0; i--)
                             {
-                                cells.Add(cellNode.Attributes["name"].Value);
-
-                                XmlNode nodeDest = targetLayout.ImportNode(cellNode.Clone(), true);
-                                targetLayout.SelectSingleNode("grid/row").AppendChild(nodeDest);
+                                XmlNode toDelete = targetLayout.SelectSingleNode("grid/row").ChildNodes[i - 1];
+                                targetLayout.SelectSingleNode("grid/row").RemoveChild(toDelete);
                             }
-                        }
 
-                        targetView.LayoutXml = targetLayout.OuterXml;
+                            foreach (XmlNode cellNode in sourceCellNodes)
+                            {
+                                if (!cellNode.Attributes["name"].Value.Contains(".") || targetView.Type != VIEW_ASSOCIATED)
+                                {
+                                    cells.Add(cellNode.Attributes["name"].Value);
+
+                                    XmlNode nodeDest = targetLayout.ImportNode(cellNode.Clone(), true);
+                                    targetLayout.SelectSingleNode("grid/row").AppendChild(nodeDest);
+                                }
+                            }
+
+                            targetView.LayoutXml = targetLayout.OuterXml;
+                        }
 
                         #endregion Replace target view cells by source view cells
 
@@ -97,24 +98,164 @@ namespace MsCrmTools.ViewLayoutReplicator.Helpers
 
                             XmlNodeList sourceAttrNodes = sourceFetchDoc.SelectNodes("fetch/entity/attribute");
 
-                            foreach (XmlNode attrNode in sourceAttrNodes)
+                            if (includeLayout)
                             {
-                                if (targetFetchDoc.SelectSingleNode("fetch/entity/attribute[@name='" + attrNode.Attributes["name"].Value + "']") == null)
+                                foreach (XmlNode attrNode in sourceAttrNodes)
                                 {
-                                    XmlNode attrNodeToAdd = targetFetchDoc.ImportNode(attrNode, true);
-                                    targetFetchDoc.SelectSingleNode("fetch/entity").AppendChild(attrNodeToAdd);
+                                    if (targetFetchDoc.SelectSingleNode("fetch/entity/attribute[@name='" + attrNode.Attributes["name"].Value + "']") == null)
+                                    {
+                                        XmlNode attrNodeToAdd = targetFetchDoc.ImportNode(attrNode, true);
+                                        targetFetchDoc.SelectSingleNode("fetch/entity").AppendChild(attrNodeToAdd);
+                                    }
                                 }
-                            }
 
-                            foreach (XmlNode cellNode in sourceCellNodes)
-                            {
-                                string name = cellNode.Attributes["name"].Value;
-                                if (!name.Contains(".") && targetFetchDoc.SelectSingleNode("fetch/entity/attribute[@name='" + name + "']") == null)
+                                foreach (XmlNode cellNode in sourceCellNodes)
                                 {
-                                    XmlElement attrNodeToAdd = targetFetchDoc.CreateElement("attribute");
-                                    attrNodeToAdd.SetAttribute("name", name);
-                                    targetFetchDoc.SelectSingleNode("fetch/entity").AppendChild(attrNodeToAdd);
+                                    string name = cellNode.Attributes["name"].Value;
+                                    if (!name.Contains(".") && targetFetchDoc.SelectSingleNode("fetch/entity/attribute[@name='" + name + "']") == null)
+                                    {
+                                        XmlElement attrNodeToAdd = targetFetchDoc.CreateElement("attribute");
+                                        attrNodeToAdd.SetAttribute("name", name);
+                                        targetFetchDoc.SelectSingleNode("fetch/entity").AppendChild(attrNodeToAdd);
+                                    }
                                 }
+
+                                #region Replicate link entities information
+
+                                // Retrieve source fetch data
+                                if (!string.IsNullOrEmpty(sourceView.FetchXml))
+                                {
+                                    //XmlDocument sourceFetchDoc = new XmlDocument();
+                                    //sourceFetchDoc.LoadXml(sourceView["fetchxml"].ToString());
+
+                                    XmlNodeList linkNodes = sourceFetchDoc.SelectNodes("fetch/entity/link-entity");
+
+                                    foreach (XmlNode sourceLinkNode in linkNodes)
+                                    {
+                                        var alias = sourceLinkNode.Attributes["alias"].Value;
+
+                                        if (cells.FirstOrDefault(c => c.StartsWith(alias + ".")) == null)
+                                            continue;
+
+                                        XmlNode targetLinkNode = targetFetchDoc.SelectSingleNode("fetch/entity/link-entity[@alias=\"" + alias + "\"]");
+
+                                        // Adds the missing link-entity node
+                                        if (targetLinkNode == null)
+                                        {
+                                            XmlNode nodeDest = targetFetchDoc.ImportNode(sourceLinkNode.Clone(), true);
+                                            XmlAttribute typeAttr = nodeDest.Attributes["link-type"];
+                                            if (typeAttr == null)
+                                            {
+                                                typeAttr = targetFetchDoc.CreateAttribute("link-type");
+                                                typeAttr.Value = "outer";
+                                                nodeDest.Attributes.Append(typeAttr);
+                                            }
+                                            else
+                                            {
+                                                typeAttr.Value = "outer";
+                                            }
+
+                                            targetFetchDoc.SelectSingleNode("fetch/entity").AppendChild(nodeDest);
+                                        }
+
+                                        // Retrieves node again (if it was added)
+                                        targetLinkNode = targetFetchDoc.SelectSingleNode("fetch/entity/link-entity[@alias=\"" + alias + "\"]");
+
+                                        // Removes existing attributes
+                                        for (int i = targetLinkNode.ChildNodes.Count; i > 0; i--)
+                                        {
+                                            if (targetLinkNode.ChildNodes[i - 1].Name == "attribute")
+                                            {
+                                                XmlNode toDelete = targetLinkNode.ChildNodes[i - 1];
+                                                targetLinkNode.RemoveChild(toDelete);
+                                            }
+                                        }
+
+                                        // Adds the attribute nodes from the source node
+                                        foreach (XmlNode node in sourceLinkNode.ChildNodes)
+                                        {
+                                            if (node.Name == "attribute")
+                                            {
+                                                XmlNode attributeNode = targetLinkNode.SelectSingleNode("attribute[@name='" + node.Attributes["name"].Value + "']");
+
+                                                if (attributeNode == null)
+                                                {
+                                                    XmlNode nodeDest = targetFetchDoc.ImportNode(node.Clone(), true);
+                                                    targetLinkNode.AppendChild(nodeDest);
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+
+                                // Suppression des éléments Attribute inutiles dans la requête
+                                List<string> attributesToRemove = new List<string>();
+
+                                foreach (XmlNode attributeNode in targetFetchDoc.SelectNodes("//attribute"))
+                                {
+                                    if (attributeNode.Attributes["name"].Value == multiObjectAttribute)
+                                        break;
+
+                                    bool isFoundInCell = false;
+
+                                    foreach (XmlNode cellNode in sourceLayout.SelectNodes("grid/row/cell"))
+                                    {
+                                        if (attributeNode.ParentNode.Name == "link-entity")
+                                        {
+                                            if (cellNode.Attributes["name"].Value == attributeNode.ParentNode.Attributes["alias"].Value + "." + attributeNode.Attributes["name"].Value)
+                                            {
+                                                isFoundInCell = true;
+                                                break;
+                                            }
+                                        }
+                                        else
+                                        {
+                                            if (attributeNode.Attributes["name"].Value == (attributeNode.ParentNode.Attributes["name"].Value + "id") || cellNode.Attributes["name"].Value == attributeNode.Attributes["name"].Value)
+                                            {
+                                                isFoundInCell = true;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    if (!isFoundInCell)
+                                    {
+                                        if (attributeNode.ParentNode.Name == "link-entity")
+                                        {
+                                            attributesToRemove.Add(attributeNode.ParentNode.Attributes["alias"].Value + "." + attributeNode.Attributes["name"].Value);
+                                        }
+                                        else
+                                        {
+                                            attributesToRemove.Add(attributeNode.Attributes["name"].Value);
+                                        }
+                                    }
+                                }
+
+                                foreach (string attributeName in attributesToRemove)
+                                {
+                                    XmlNode node;
+
+                                    if (attributeName.Contains("."))
+                                    {
+                                        node = targetFetchDoc.SelectSingleNode("fetch/entity/link-entity[@alias='" + attributeName.Split('.')[0] + "']/attribute[@name='" + attributeName.Split('.')[1] + "']");
+                                        targetFetchDoc.SelectSingleNode("fetch/entity/link-entity[@alias='" + node.ParentNode.Attributes["alias"].Value + "']").RemoveChild(node);
+                                    }
+                                    else
+                                    {
+                                        node = targetFetchDoc.SelectSingleNode("fetch/entity/attribute[@name='" + attributeName + "']");
+                                        targetFetchDoc.SelectSingleNode("fetch/entity").RemoveChild(node);
+                                    }
+                                }
+
+                                foreach (XmlNode linkentityNode in targetFetchDoc.SelectNodes("fetch/entity/link-entity"))
+                                {
+                                    if (linkentityNode != null && linkentityNode.ChildNodes.Count == 0)
+                                    {
+                                        targetFetchDoc.SelectSingleNode("fetch/entity").RemoveChild(linkentityNode);
+                                    }
+                                }
+
+                                #endregion Replicate link entities information
                             }
 
                             if (includeSorting)
@@ -141,144 +282,7 @@ namespace MsCrmTools.ViewLayoutReplicator.Helpers
                                 #endregion Copy Sorting settings to target views
                             }
 
-                            #region Replicate link entities information
-
-                            // Retrieve source fetch data
-                            if (!string.IsNullOrEmpty(sourceView.FetchXml))
-                            {
-                                //XmlDocument sourceFetchDoc = new XmlDocument();
-                                //sourceFetchDoc.LoadXml(sourceView["fetchxml"].ToString());
-
-                                XmlNodeList linkNodes = sourceFetchDoc.SelectNodes("fetch/entity/link-entity");
-
-                                foreach (XmlNode sourceLinkNode in linkNodes)
-                                {
-                                    var alias = sourceLinkNode.Attributes["alias"].Value;
-
-                                    if (cells.FirstOrDefault(c => c.StartsWith(alias + ".")) == null)
-                                        continue;
-
-                                    XmlNode targetLinkNode = targetFetchDoc.SelectSingleNode("fetch/entity/link-entity[@alias=\"" + alias + "\"]");
-
-                                    // Adds the missing link-entity node
-                                    if (targetLinkNode == null)
-                                    {
-                                        XmlNode nodeDest = targetFetchDoc.ImportNode(sourceLinkNode.Clone(), true);
-                                        XmlAttribute typeAttr = nodeDest.Attributes["link-type"];
-                                        if (typeAttr == null)
-                                        {
-                                            typeAttr = targetFetchDoc.CreateAttribute("link-type");
-                                            typeAttr.Value = "outer";
-                                            nodeDest.Attributes.Append(typeAttr);
-                                        }
-                                        else
-                                        {
-                                            typeAttr.Value = "outer";
-                                        }
-
-                                        targetFetchDoc.SelectSingleNode("fetch/entity").AppendChild(nodeDest);
-                                    }
-
-                                    // Retrieves node again (if it was added)
-                                    targetLinkNode = targetFetchDoc.SelectSingleNode("fetch/entity/link-entity[@alias=\"" + alias + "\"]");
-
-                                    // Removes existing attributes
-                                    for (int i = targetLinkNode.ChildNodes.Count; i > 0; i--)
-                                    {
-                                        if (targetLinkNode.ChildNodes[i - 1].Name == "attribute")
-                                        {
-                                            XmlNode toDelete = targetLinkNode.ChildNodes[i - 1];
-                                            targetLinkNode.RemoveChild(toDelete);
-                                        }
-                                    }
-
-                                    // Adds the attribute nodes from the source node
-                                    foreach (XmlNode node in sourceLinkNode.ChildNodes)
-                                    {
-                                        if (node.Name == "attribute")
-                                        {
-                                            XmlNode attributeNode = targetLinkNode.SelectSingleNode("attribute[@name='" + node.Attributes["name"].Value + "']");
-
-                                            if (attributeNode == null)
-                                            {
-                                                XmlNode nodeDest = targetFetchDoc.ImportNode(node.Clone(), true);
-                                                targetLinkNode.AppendChild(nodeDest);
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            // Suppression des éléments Attribute inutiles dans la requête
-                            List<string> attributesToRemove = new List<string>();
-
-                            foreach (XmlNode attributeNode in targetFetchDoc.SelectNodes("//attribute"))
-                            {
-                                if (attributeNode.Attributes["name"].Value == multiObjectAttribute)
-                                    break;
-
-                                bool isFoundInCell = false;
-
-                                foreach (XmlNode cellNode in sourceLayout.SelectNodes("grid/row/cell"))
-                                {
-                                    if (attributeNode.ParentNode.Name == "link-entity")
-                                    {
-                                        if (cellNode.Attributes["name"].Value == attributeNode.ParentNode.Attributes["alias"].Value + "." + attributeNode.Attributes["name"].Value)
-                                        {
-                                            isFoundInCell = true;
-                                            break;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        if (attributeNode.Attributes["name"].Value == (attributeNode.ParentNode.Attributes["name"].Value + "id") || cellNode.Attributes["name"].Value == attributeNode.Attributes["name"].Value)
-                                        {
-                                            isFoundInCell = true;
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                if (!isFoundInCell)
-                                {
-                                    if (attributeNode.ParentNode.Name == "link-entity")
-                                    {
-                                        attributesToRemove.Add(attributeNode.ParentNode.Attributes["alias"].Value + "." + attributeNode.Attributes["name"].Value);
-                                    }
-                                    else
-                                    {
-                                        attributesToRemove.Add(attributeNode.Attributes["name"].Value);
-                                    }
-                                }
-                            }
-
-                            foreach (string attributeName in attributesToRemove)
-                            {
-                                XmlNode node;
-
-                                if (attributeName.Contains("."))
-                                {
-                                    node = targetFetchDoc.SelectSingleNode("fetch/entity/link-entity[@alias='" + attributeName.Split('.')[0] + "']/attribute[@name='" + attributeName.Split('.')[1] + "']");
-                                    targetFetchDoc.SelectSingleNode("fetch/entity/link-entity[@alias='" + node.ParentNode.Attributes["alias"].Value + "']").RemoveChild(node);
-                                }
-                                else
-                                {
-                                    node = targetFetchDoc.SelectSingleNode("fetch/entity/attribute[@name='" + attributeName + "']");
-                                    targetFetchDoc.SelectSingleNode("fetch/entity").RemoveChild(node);
-                                }
-                            }
-
-                            foreach (XmlNode linkentityNode in targetFetchDoc.SelectNodes("fetch/entity/link-entity"))
-                            {
-                                if (linkentityNode != null && linkentityNode.ChildNodes.Count == 0)
-                                {
-                                    targetFetchDoc.SelectSingleNode("fetch/entity").RemoveChild(linkentityNode);
-                                }
-                            }
-
                             targetView.FetchXml = targetFetchDoc.OuterXml;
-
-                            #endregion Replicate link entities information
                         }
 
                         #region Save target view

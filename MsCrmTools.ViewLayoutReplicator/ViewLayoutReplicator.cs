@@ -108,11 +108,6 @@ namespace MsCrmTools.ViewLayoutReplicator
 
         private void TsbSaveViewsClick(object sender, EventArgs e)
         {
-            tsbPublishEntity.Enabled = false;
-            tsbPublishAll.Enabled = false;
-            tsbSaveViews.Enabled = false;
-            tsbLoadEntities.Enabled = false;
-
             var targetViews = lvTargetViews.CheckedItems.Cast<ListViewItem>().Select(i => new ViewDefinition((Entity)i.Tag)).ToList();
             var sourceView = new ViewDefinition((Entity)lvSourceViews.SelectedItems.Cast<ListViewItem>().First().Tag);
 
@@ -126,9 +121,9 @@ namespace MsCrmTools.ViewLayoutReplicator
                 return;
             }
 
+            var sb = new StringBuilder();
             if (targetViews.Any(tv => tv.Type == ViewHelper.VIEW_SEARCH))
             {
-                var sb = new StringBuilder();
                 sb.AppendLine("You selected Lookup View as a target.");
                 sb.AppendLine("Please notice that the layout of a Lookup view should be the primary field of the entity to avoid strange behavior when working with lookups.");
                 sb.AppendLine();
@@ -140,14 +135,31 @@ namespace MsCrmTools.ViewLayoutReplicator
                 }
             }
 
+            sb = new StringBuilder();
+            sb.AppendLine("The selected target views will:");
+            sb.AppendLine($"- {(chkCopyLayout.Checked ? "" : "NOT ")}be updated with the layout of the source view");
+            sb.AppendLine($"- {(chkCopySortOrder.Checked ? "" : "NOT ")}be updated with the sort order of the source view");
+            sb.AppendLine();
+            sb.AppendLine("Are your sure you want to update all selected view(s) ?");
+            if (DialogResult.No ==
+                MessageBox.Show(this, sb.ToString(), "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
+            {
+                return;
+            }
+
+            tsbPublishEntity.Enabled = false;
+            tsbPublishAll.Enabled = false;
+            tsbSaveViews.Enabled = false;
+            tsbLoadEntities.Enabled = false;
+
             WorkAsync(new WorkAsyncInfo
             {
                 Message = "Saving views...",
-                AsyncArgument = new object[] { sourceView, targetViews, includeSortingWhenReplicatingViewToolStripMenuItem.Checked },
+                AsyncArgument = new object[] { sourceView, targetViews, chkCopyLayout.Checked, chkCopySortOrder.Checked },
                 Work = (bw, evt) =>
                 {
                     var args = (object[])evt.Argument;
-                    evt.Result = ViewHelper.PropagateLayout((ViewDefinition)args[0], (List<ViewDefinition>)args[1], (bool)args[2], Service);
+                    evt.Result = ViewHelper.PropagateLayout((ViewDefinition)args[0], (List<ViewDefinition>)args[1], (bool)args[2], (bool)args[3], Service);
                 },
                 PostWorkCallBack = evt =>
                 {
@@ -471,11 +483,14 @@ namespace MsCrmTools.ViewLayoutReplicator
 
         #endregion ListViews Handlers
 
-        public string HelpUrl { get { return "https://github.com/MscrmTools/MsCrmTools.ViewLayoutReplicator/wiki"; } }
+        public string HelpUrl
+        { get { return "https://github.com/MscrmTools/MsCrmTools.ViewLayoutReplicator/wiki"; } }
 
-        public string RepositoryName { get { return "MscrmTools.ViewLayoutReplicator"; } }
+        public string RepositoryName
+        { get { return "MscrmTools.ViewLayoutReplicator"; } }
 
-        public string UserName { get { return "MscrmTools"; } }
+        public string UserName
+        { get { return "MscrmTools"; } }
 
         private void chkShowSystem_CheckedChanged(object sender, EventArgs e)
         {

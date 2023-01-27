@@ -37,7 +37,15 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.gbTargetViews = new System.Windows.Forms.GroupBox();
+            this.lvTargetViews = new System.Windows.Forms.ListView();
+            this.viewName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.viewType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
+            this.pnlTargetViewsOptions = new System.Windows.Forms.Panel();
+            this.chkCopySortOrder = new System.Windows.Forms.CheckBox();
+            this.chkCopyLayout = new System.Windows.Forms.CheckBox();
+            this.chkShowUser = new System.Windows.Forms.CheckBox();
+            this.chkShowSystem = new System.Windows.Forms.CheckBox();
             this.tsMain = new System.Windows.Forms.ToolStrip();
             this.tsbCloseThisTab = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
@@ -47,9 +55,6 @@
             this.tsbPublishEntity = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbPublishAll = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-            this.tssSettings = new System.Windows.Forms.ToolStripDropDownButton();
-            this.includeSortingWhenReplicatingViewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -58,14 +63,9 @@
             this.allViewName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.allViewType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvSourceViewLayoutPreview = new System.Windows.Forms.ListView();
-            this.pnlTargetViewsOptions = new System.Windows.Forms.Panel();
-            this.chkShowSystem = new System.Windows.Forms.CheckBox();
-            this.chkShowUser = new System.Windows.Forms.CheckBox();
-            this.lvTargetViews = new System.Windows.Forms.ListView();
-            this.viewName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.viewType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.gbEntities.SuspendLayout();
             this.gbTargetViews.SuspendLayout();
+            this.pnlTargetViewsOptions.SuspendLayout();
             this.tsMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -76,7 +76,6 @@
             this.splitContainer2.Panel2.SuspendLayout();
             this.splitContainer2.SuspendLayout();
             this.gbSourceViews.SuspendLayout();
-            this.pnlTargetViewsOptions.SuspendLayout();
             this.SuspendLayout();
             // 
             // gbEntities
@@ -90,7 +89,7 @@
             this.gbEntities.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gbEntities.Name = "gbEntities";
             this.gbEntities.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gbEntities.Size = new System.Drawing.Size(404, 756);
+            this.gbEntities.Size = new System.Drawing.Size(420, 756);
             this.gbEntities.TabIndex = 89;
             this.gbEntities.TabStop = false;
             this.gbEntities.Text = "Entities";
@@ -112,7 +111,7 @@
             this.txtSearchEntity.Location = new System.Drawing.Point(84, 25);
             this.txtSearchEntity.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtSearchEntity.Name = "txtSearchEntity";
-            this.txtSearchEntity.Size = new System.Drawing.Size(309, 26);
+            this.txtSearchEntity.Size = new System.Drawing.Size(325, 26);
             this.txtSearchEntity.TabIndex = 80;
             this.txtSearchEntity.KeyUp += new System.Windows.Forms.KeyEventHandler(this.OnSearchKeyUp);
             // 
@@ -129,7 +128,7 @@
             this.lvEntities.Location = new System.Drawing.Point(9, 65);
             this.lvEntities.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvEntities.Name = "lvEntities";
-            this.lvEntities.Size = new System.Drawing.Size(384, 685);
+            this.lvEntities.Size = new System.Drawing.Size(400, 685);
             this.lvEntities.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvEntities.TabIndex = 79;
             this.lvEntities.UseCompatibleStateImageBehavior = false;
@@ -157,10 +156,39 @@
             this.gbTargetViews.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gbTargetViews.Name = "gbTargetViews";
             this.gbTargetViews.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gbTargetViews.Size = new System.Drawing.Size(808, 407);
+            this.gbTargetViews.Size = new System.Drawing.Size(842, 407);
             this.gbTargetViews.TabIndex = 87;
             this.gbTargetViews.TabStop = false;
             this.gbTargetViews.Text = "Target Views";
+            // 
+            // lvTargetViews
+            // 
+            this.lvTargetViews.CheckBoxes = true;
+            this.lvTargetViews.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.viewName,
+            this.viewType});
+            this.lvTargetViews.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.lvTargetViews.HideSelection = false;
+            this.lvTargetViews.Location = new System.Drawing.Point(4, 63);
+            this.lvTargetViews.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.lvTargetViews.Name = "lvTargetViews";
+            this.lvTargetViews.Size = new System.Drawing.Size(834, 339);
+            this.lvTargetViews.SmallImageList = this.imageList1;
+            this.lvTargetViews.Sorting = System.Windows.Forms.SortOrder.Ascending;
+            this.lvTargetViews.TabIndex = 80;
+            this.lvTargetViews.UseCompatibleStateImageBehavior = false;
+            this.lvTargetViews.View = System.Windows.Forms.View.Details;
+            this.lvTargetViews.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.LvTargetViewsItemChecked);
+            // 
+            // viewName
+            // 
+            this.viewName.Text = "View Name";
+            this.viewName.Width = 350;
+            // 
+            // viewType
+            // 
+            this.viewType.Text = "View Type";
+            this.viewType.Width = 130;
             // 
             // imageList1
             // 
@@ -174,6 +202,68 @@
             this.imageList1.Images.SetKeyName(5, "ico_16_1039_quickFind.gif");
             this.imageList1.Images.SetKeyName(6, "userquery.png");
             // 
+            // pnlTargetViewsOptions
+            // 
+            this.pnlTargetViewsOptions.Controls.Add(this.chkCopySortOrder);
+            this.pnlTargetViewsOptions.Controls.Add(this.chkCopyLayout);
+            this.pnlTargetViewsOptions.Controls.Add(this.chkShowUser);
+            this.pnlTargetViewsOptions.Controls.Add(this.chkShowSystem);
+            this.pnlTargetViewsOptions.Dock = System.Windows.Forms.DockStyle.Top;
+            this.pnlTargetViewsOptions.Location = new System.Drawing.Point(4, 24);
+            this.pnlTargetViewsOptions.Name = "pnlTargetViewsOptions";
+            this.pnlTargetViewsOptions.Size = new System.Drawing.Size(834, 39);
+            this.pnlTargetViewsOptions.TabIndex = 79;
+            // 
+            // chkCopySortOrder
+            // 
+            this.chkCopySortOrder.Checked = true;
+            this.chkCopySortOrder.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCopySortOrder.Dock = System.Windows.Forms.DockStyle.Left;
+            this.chkCopySortOrder.Location = new System.Drawing.Point(547, 0);
+            this.chkCopySortOrder.Name = "chkCopySortOrder";
+            this.chkCopySortOrder.Size = new System.Drawing.Size(161, 39);
+            this.chkCopySortOrder.TabIndex = 3;
+            this.chkCopySortOrder.Text = "Copy Sort order";
+            this.chkCopySortOrder.UseVisualStyleBackColor = true;
+            // 
+            // chkCopyLayout
+            // 
+            this.chkCopyLayout.Checked = true;
+            this.chkCopyLayout.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCopyLayout.Dock = System.Windows.Forms.DockStyle.Left;
+            this.chkCopyLayout.Location = new System.Drawing.Point(349, 0);
+            this.chkCopyLayout.Name = "chkCopyLayout";
+            this.chkCopyLayout.Size = new System.Drawing.Size(198, 39);
+            this.chkCopyLayout.TabIndex = 2;
+            this.chkCopyLayout.Text = "Copy Columns layout";
+            this.chkCopyLayout.UseVisualStyleBackColor = true;
+            // 
+            // chkShowUser
+            // 
+            this.chkShowUser.Checked = true;
+            this.chkShowUser.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowUser.Dock = System.Windows.Forms.DockStyle.Left;
+            this.chkShowUser.Location = new System.Drawing.Point(188, 0);
+            this.chkShowUser.Name = "chkShowUser";
+            this.chkShowUser.Size = new System.Drawing.Size(161, 39);
+            this.chkShowUser.TabIndex = 1;
+            this.chkShowUser.Text = "Show user views";
+            this.chkShowUser.UseVisualStyleBackColor = true;
+            this.chkShowUser.CheckedChanged += new System.EventHandler(this.chkShowUser_CheckedChanged);
+            // 
+            // chkShowSystem
+            // 
+            this.chkShowSystem.Checked = true;
+            this.chkShowSystem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkShowSystem.Dock = System.Windows.Forms.DockStyle.Left;
+            this.chkShowSystem.Location = new System.Drawing.Point(0, 0);
+            this.chkShowSystem.Name = "chkShowSystem";
+            this.chkShowSystem.Size = new System.Drawing.Size(188, 39);
+            this.chkShowSystem.TabIndex = 0;
+            this.chkShowSystem.Text = "Show system views";
+            this.chkShowSystem.UseVisualStyleBackColor = true;
+            this.chkShowSystem.CheckedChanged += new System.EventHandler(this.chkShowSystem_CheckedChanged);
+            // 
             // tsMain
             // 
             this.tsMain.AutoSize = false;
@@ -185,13 +275,10 @@
             this.tsbSaveViews,
             this.tsbPublishEntity,
             this.toolStripSeparator3,
-            this.tsbPublishAll,
-            this.toolStripSeparator4,
-            this.tssSettings});
+            this.tsbPublishAll});
             this.tsMain.Location = new System.Drawing.Point(0, 0);
             this.tsMain.Name = "tsMain";
-            this.tsMain.Padding = new System.Windows.Forms.Padding(0, 0, 2, 0);
-            this.tsMain.Size = new System.Drawing.Size(1216, 38);
+            this.tsMain.Size = new System.Drawing.Size(1266, 38);
             this.tsMain.TabIndex = 85;
             this.tsMain.Text = "toolStrip1";
             // 
@@ -201,7 +288,7 @@
             this.tsbCloseThisTab.Image = ((System.Drawing.Image)(resources.GetObject("tsbCloseThisTab.Image")));
             this.tsbCloseThisTab.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbCloseThisTab.Name = "tsbCloseThisTab";
-            this.tsbCloseThisTab.Size = new System.Drawing.Size(28, 35);
+            this.tsbCloseThisTab.Size = new System.Drawing.Size(34, 33);
             this.tsbCloseThisTab.Text = "Close this tab";
             this.tsbCloseThisTab.Click += new System.EventHandler(this.TsbCloseThisTabClick);
             // 
@@ -215,7 +302,7 @@
             this.tsbLoadEntities.Image = ((System.Drawing.Image)(resources.GetObject("tsbLoadEntities.Image")));
             this.tsbLoadEntities.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbLoadEntities.Name = "tsbLoadEntities";
-            this.tsbLoadEntities.Size = new System.Drawing.Size(140, 35);
+            this.tsbLoadEntities.Size = new System.Drawing.Size(140, 33);
             this.tsbLoadEntities.Text = "Load Entities";
             this.tsbLoadEntities.Click += new System.EventHandler(this.TsbLoadEntitiesClick);
             // 
@@ -230,7 +317,7 @@
             this.tsbSaveViews.Image = ((System.Drawing.Image)(resources.GetObject("tsbSaveViews.Image")));
             this.tsbSaveViews.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSaveViews.Name = "tsbSaveViews";
-            this.tsbSaveViews.Size = new System.Drawing.Size(125, 35);
+            this.tsbSaveViews.Size = new System.Drawing.Size(125, 33);
             this.tsbSaveViews.Text = "Save views";
             this.tsbSaveViews.Click += new System.EventHandler(this.TsbSaveViewsClick);
             // 
@@ -240,7 +327,7 @@
             this.tsbPublishEntity.Image = ((System.Drawing.Image)(resources.GetObject("tsbPublishEntity.Image")));
             this.tsbPublishEntity.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbPublishEntity.Name = "tsbPublishEntity";
-            this.tsbPublishEntity.Size = new System.Drawing.Size(146, 35);
+            this.tsbPublishEntity.Size = new System.Drawing.Size(146, 33);
             this.tsbPublishEntity.Text = "Publish entity";
             this.tsbPublishEntity.Click += new System.EventHandler(this.TsbPublishEntityClick);
             // 
@@ -255,35 +342,9 @@
             this.tsbPublishAll.Image = ((System.Drawing.Image)(resources.GetObject("tsbPublishAll.Image")));
             this.tsbPublishAll.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbPublishAll.Name = "tsbPublishAll";
-            this.tsbPublishAll.Size = new System.Drawing.Size(119, 35);
+            this.tsbPublishAll.Size = new System.Drawing.Size(119, 33);
             this.tsbPublishAll.Text = "Publish all";
             this.tsbPublishAll.Click += new System.EventHandler(this.TsbPublishAllClick);
-            // 
-            // toolStripSeparator4
-            // 
-            this.toolStripSeparator4.Name = "toolStripSeparator4";
-            this.toolStripSeparator4.Size = new System.Drawing.Size(6, 38);
-            // 
-            // tssSettings
-            // 
-            this.tssSettings.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.includeSortingWhenReplicatingViewToolStripMenuItem});
-            this.tssSettings.Image = ((System.Drawing.Image)(resources.GetObject("tssSettings.Image")));
-            this.tssSettings.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tssSettings.Name = "tssSettings";
-            this.tssSettings.Size = new System.Drawing.Size(118, 35);
-            this.tssSettings.Text = "Settings";
-            // 
-            // includeSortingWhenReplicatingViewToolStripMenuItem
-            // 
-            this.includeSortingWhenReplicatingViewToolStripMenuItem.Checked = true;
-            this.includeSortingWhenReplicatingViewToolStripMenuItem.CheckOnClick = true;
-            this.includeSortingWhenReplicatingViewToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.includeSortingWhenReplicatingViewToolStripMenuItem.Name = "includeSortingWhenReplicatingViewToolStripMenuItem";
-            this.includeSortingWhenReplicatingViewToolStripMenuItem.Size = new System.Drawing.Size(389, 30);
-            this.includeSortingWhenReplicatingViewToolStripMenuItem.Text = "Include sorting when replicating view";
-            this.includeSortingWhenReplicatingViewToolStripMenuItem.ToolTipText = "If this option is checked, the view will be replicated with the corresponding sor" +
-    "ting customization";
             // 
             // imageList2
             // 
@@ -304,8 +365,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1216, 756);
-            this.splitContainer1.SplitterDistance = 404;
+            this.splitContainer1.Size = new System.Drawing.Size(1266, 756);
+            this.splitContainer1.SplitterDistance = 420;
             this.splitContainer1.TabIndex = 90;
             // 
             // splitContainer2
@@ -322,7 +383,7 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.gbTargetViews);
-            this.splitContainer2.Size = new System.Drawing.Size(808, 756);
+            this.splitContainer2.Size = new System.Drawing.Size(842, 756);
             this.splitContainer2.SplitterDistance = 344;
             this.splitContainer2.SplitterWidth = 5;
             this.splitContainer2.TabIndex = 0;
@@ -337,7 +398,7 @@
             this.gbSourceViews.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gbSourceViews.Name = "gbSourceViews";
             this.gbSourceViews.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gbSourceViews.Size = new System.Drawing.Size(808, 344);
+            this.gbSourceViews.Size = new System.Drawing.Size(842, 344);
             this.gbSourceViews.TabIndex = 89;
             this.gbSourceViews.TabStop = false;
             this.gbSourceViews.Text = "Source Views";
@@ -353,7 +414,7 @@
             this.lvSourceViews.Location = new System.Drawing.Point(4, 24);
             this.lvSourceViews.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvSourceViews.Name = "lvSourceViews";
-            this.lvSourceViews.Size = new System.Drawing.Size(800, 214);
+            this.lvSourceViews.Size = new System.Drawing.Size(834, 214);
             this.lvSourceViews.SmallImageList = this.imageList1;
             this.lvSourceViews.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvSourceViews.TabIndex = 68;
@@ -377,77 +438,14 @@
             this.lvSourceViewLayoutPreview.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.lvSourceViewLayoutPreview.ForeColor = System.Drawing.Color.Black;
             this.lvSourceViewLayoutPreview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.lvSourceViewLayoutPreview.HideSelection = false;
             this.lvSourceViewLayoutPreview.Location = new System.Drawing.Point(4, 238);
             this.lvSourceViewLayoutPreview.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvSourceViewLayoutPreview.Name = "lvSourceViewLayoutPreview";
-            this.lvSourceViewLayoutPreview.Size = new System.Drawing.Size(800, 101);
+            this.lvSourceViewLayoutPreview.Size = new System.Drawing.Size(834, 101);
             this.lvSourceViewLayoutPreview.TabIndex = 67;
             this.lvSourceViewLayoutPreview.UseCompatibleStateImageBehavior = false;
             this.lvSourceViewLayoutPreview.View = System.Windows.Forms.View.Details;
-            // 
-            // pnlTargetViewsOptions
-            // 
-            this.pnlTargetViewsOptions.Controls.Add(this.chkShowUser);
-            this.pnlTargetViewsOptions.Controls.Add(this.chkShowSystem);
-            this.pnlTargetViewsOptions.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlTargetViewsOptions.Location = new System.Drawing.Point(4, 24);
-            this.pnlTargetViewsOptions.Name = "pnlTargetViewsOptions";
-            this.pnlTargetViewsOptions.Size = new System.Drawing.Size(800, 39);
-            this.pnlTargetViewsOptions.TabIndex = 79;
-            // 
-            // chkShowSystem
-            // 
-            this.chkShowSystem.AutoSize = true;
-            this.chkShowSystem.Checked = true;
-            this.chkShowSystem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowSystem.Location = new System.Drawing.Point(3, 3);
-            this.chkShowSystem.Name = "chkShowSystem";
-            this.chkShowSystem.Size = new System.Drawing.Size(171, 24);
-            this.chkShowSystem.TabIndex = 0;
-            this.chkShowSystem.Text = "Show system views";
-            this.chkShowSystem.UseVisualStyleBackColor = true;
-            this.chkShowSystem.CheckedChanged += new System.EventHandler(this.chkShowSystem_CheckedChanged);
-            // 
-            // chkShowUser
-            // 
-            this.chkShowUser.AutoSize = true;
-            this.chkShowUser.Checked = true;
-            this.chkShowUser.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkShowUser.Location = new System.Drawing.Point(180, 3);
-            this.chkShowUser.Name = "chkShowUser";
-            this.chkShowUser.Size = new System.Drawing.Size(152, 24);
-            this.chkShowUser.TabIndex = 1;
-            this.chkShowUser.Text = "Show user views";
-            this.chkShowUser.UseVisualStyleBackColor = true;
-            this.chkShowUser.CheckedChanged += new System.EventHandler(this.chkShowUser_CheckedChanged);
-            // 
-            // lvTargetViews
-            // 
-            this.lvTargetViews.CheckBoxes = true;
-            this.lvTargetViews.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.viewName,
-            this.viewType});
-            this.lvTargetViews.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.lvTargetViews.Location = new System.Drawing.Point(4, 63);
-            this.lvTargetViews.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.lvTargetViews.Name = "lvTargetViews";
-            this.lvTargetViews.Size = new System.Drawing.Size(800, 339);
-            this.lvTargetViews.SmallImageList = this.imageList1;
-            this.lvTargetViews.Sorting = System.Windows.Forms.SortOrder.Ascending;
-            this.lvTargetViews.TabIndex = 80;
-            this.lvTargetViews.UseCompatibleStateImageBehavior = false;
-            this.lvTargetViews.View = System.Windows.Forms.View.Details;
-            this.lvTargetViews.ItemChecked += new System.Windows.Forms.ItemCheckedEventHandler(this.LvTargetViewsItemChecked);
-            // 
-            // viewName
-            // 
-            this.viewName.Text = "View Name";
-            this.viewName.Width = 350;
-            // 
-            // viewType
-            // 
-            this.viewType.Text = "View Type";
-            this.viewType.Width = 130;
             // 
             // ViewLayoutReplicator
             // 
@@ -457,10 +455,11 @@
             this.Controls.Add(this.tsMain);
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "ViewLayoutReplicator";
-            this.Size = new System.Drawing.Size(1216, 794);
+            this.Size = new System.Drawing.Size(1266, 794);
             this.gbEntities.ResumeLayout(false);
             this.gbEntities.PerformLayout();
             this.gbTargetViews.ResumeLayout(false);
+            this.pnlTargetViewsOptions.ResumeLayout(false);
             this.tsMain.ResumeLayout(false);
             this.tsMain.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
@@ -472,8 +471,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
             this.splitContainer2.ResumeLayout(false);
             this.gbSourceViews.ResumeLayout(false);
-            this.pnlTargetViewsOptions.ResumeLayout(false);
-            this.pnlTargetViewsOptions.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -505,14 +502,13 @@
         private System.Windows.Forms.ListView lvSourceViewLayoutPreview;
 		private System.Windows.Forms.TextBox txtSearchEntity;
 		private System.Windows.Forms.Label lblSearchEntity;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
-        private System.Windows.Forms.ToolStripDropDownButton tssSettings;
-        private System.Windows.Forms.ToolStripMenuItem includeSortingWhenReplicatingViewToolStripMenuItem;
         private System.Windows.Forms.ListView lvTargetViews;
         private System.Windows.Forms.ColumnHeader viewName;
         private System.Windows.Forms.ColumnHeader viewType;
         private System.Windows.Forms.Panel pnlTargetViewsOptions;
         private System.Windows.Forms.CheckBox chkShowUser;
         private System.Windows.Forms.CheckBox chkShowSystem;
+        private System.Windows.Forms.CheckBox chkCopySortOrder;
+        private System.Windows.Forms.CheckBox chkCopyLayout;
     }
 }
