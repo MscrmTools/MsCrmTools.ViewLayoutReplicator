@@ -422,11 +422,23 @@ namespace MsCrmTools.ViewLayoutReplicator
                         XmlDocument layoutDoc = new XmlDocument();
                         layoutDoc.LoadXml(layoutXml);
 
+                        XmlDocument fetchDoc = new XmlDocument();
+                        fetchDoc.LoadXml(fetchXml);
+
                         EntityMetadata emdWithItems = MetadataHelper.RetrieveEntity(currentEmd.LogicalName, Service);
 
                         var headers = new List<ColumnHeader>();
 
                         var item = new ListViewItem();
+
+                        string orderColumn = "";
+                        bool orderDirection = false;
+                        var orderNode = fetchDoc.SelectSingleNode("fetch/entity/order");
+                        if (orderNode != null)
+                        {
+                            orderColumn = orderNode.Attributes["attribute"].Value;
+                            orderDirection = orderNode.Attributes["descending"]?.Value?.ToLower() == "false";
+                        }
 
                         foreach (XmlNode columnNode in layoutDoc.SelectNodes("grid/row/cell"))
                         {
@@ -436,6 +448,12 @@ namespace MsCrmTools.ViewLayoutReplicator
                             header.Text = MetadataHelper.RetrieveAttributeDisplayName(emdWithItems,
                                                                                       columnNode.Attributes["name"].Value,
                                                                                       fetchXml, Service);
+
+                            if (columnNode.Attributes["name"].Value == orderColumn)
+                            {
+                                header.Text += (orderDirection ? " ↑" : " ↓");
+                            }
+
                             headers.Add(header);
 
                             if (string.IsNullOrEmpty(item.Text))
