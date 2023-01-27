@@ -45,8 +45,24 @@ namespace MsCrmTools.ViewLayoutReplicator
 
         #region Fill Entities
 
-        private void LoadEntities()
+        private void LoadEntities(bool fromSolution = false)
         {
+            Guid solutionId = Guid.Empty;
+            if (fromSolution)
+            {
+                using (var dialog = new SolutionPicker(Service))
+                {
+                    if (dialog.ShowDialog(this) == DialogResult.OK)
+                    {
+                        solutionId = dialog.SelectedSolution.FirstOrDefault()?.Id ?? Guid.Empty;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+
             txtSearchEntity.Text = string.Empty;
             lvEntities.Items.Clear();
             gbEntities.Enabled = false;
@@ -63,7 +79,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                 Message = "Loading entities...",
                 Work = (bw, e) =>
                 {
-                    e.Result = MetadataHelper.RetrieveEntities(Service);
+                    e.Result = MetadataHelper.RetrieveEntities(Service, solutionId);
                 },
                 PostWorkCallBack = e =>
                 {
@@ -97,11 +113,6 @@ namespace MsCrmTools.ViewLayoutReplicator
             });
         }
 
-        private void TsbLoadEntitiesClick(object sender, EventArgs e)
-        {
-            ExecuteMethod(LoadEntities);
-        }
-
         #endregion Fill Entities
 
         #region Save Views
@@ -116,7 +127,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                 && new Version(ConnectionDetail.OrganizationVersion) >= new Version(8, 2, 0, 0)
                 && new Version(ConnectionDetail.OrganizationVersion) < new Version(9, 1, 0, 0))
             {
-                var message = "The source view contains related entity attribute and you selected the Quick Search view as a target. This is not allowed in Microsoft Dynamics 365";
+                var message = "The source view contains related table attribute and you selected the Quick Search view as a target. This is not allowed in Microsoft Dynamics 365";
                 MessageBox.Show(this, message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
@@ -125,7 +136,7 @@ namespace MsCrmTools.ViewLayoutReplicator
             if (targetViews.Any(tv => tv.Type == ViewHelper.VIEW_SEARCH))
             {
                 sb.AppendLine("You selected Lookup View as a target.");
-                sb.AppendLine("Please notice that the layout of a Lookup view should be the primary field of the entity to avoid strange behavior when working with lookups.");
+                sb.AppendLine("Please notice that the layout of a Lookup view should be the primary field of the table to avoid strange behavior when working with lookups.");
                 sb.AppendLine();
                 sb.AppendLine("Are your sure you want to update all selected view(s), including the Lookup view?");
                 if (DialogResult.No ==
@@ -150,7 +161,7 @@ namespace MsCrmTools.ViewLayoutReplicator
             tsbPublishEntity.Enabled = false;
             tsbPublishAll.Enabled = false;
             tsbSaveViews.Enabled = false;
-            tsbLoadEntities.Enabled = false;
+            tssbLoadAllEntities.Enabled = false;
 
             WorkAsync(new WorkAsyncInfo
             {
@@ -172,7 +183,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                     tsbPublishEntity.Enabled = true;
                     tsbPublishAll.Enabled = true;
                     tsbSaveViews.Enabled = true;
-                    tsbLoadEntities.Enabled = true;
+                    tssbLoadAllEntities.Enabled = true;
                 }
             });
         }
@@ -188,11 +199,11 @@ namespace MsCrmTools.ViewLayoutReplicator
                 tsbPublishEntity.Enabled = false;
                 tsbPublishAll.Enabled = false;
                 tsbSaveViews.Enabled = false;
-                tsbLoadEntities.Enabled = false;
+                tssbLoadAllEntities.Enabled = false;
 
                 WorkAsync(new WorkAsyncInfo
                 {
-                    Message = "Publishing entity...",
+                    Message = "Publishing table...",
                     AsyncArgument = lvEntities.SelectedItems[0].Tag,
                     Work = (bw, evt) =>
                     {
@@ -219,7 +230,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                         tsbPublishEntity.Enabled = true;
                         tsbPublishAll.Enabled = true;
                         tsbSaveViews.Enabled = true;
-                        tsbLoadEntities.Enabled = true;
+                        tssbLoadAllEntities.Enabled = true;
                     }
                 });
             }
@@ -349,7 +360,7 @@ namespace MsCrmTools.ViewLayoutReplicator
 
             if (sourceViewsItems.Count == 0)
             {
-                MessageBox.Show(this, "This entity does not contain any view", "Warning", MessageBoxButtons.OK,
+                MessageBox.Show(this, "This table does not contain any view", "Warning", MessageBoxButtons.OK,
                                 MessageBoxIcon.Warning);
                 return;
             }
@@ -564,7 +575,7 @@ namespace MsCrmTools.ViewLayoutReplicator
             tsbPublishEntity.Enabled = false;
             tsbPublishAll.Enabled = false;
             tsbSaveViews.Enabled = false;
-            tsbLoadEntities.Enabled = false;
+            tssbLoadAllEntities.Enabled = false;
 
             WorkAsync(new WorkAsyncInfo
             {
@@ -587,9 +598,22 @@ namespace MsCrmTools.ViewLayoutReplicator
                     tsbPublishEntity.Enabled = true;
                     tsbPublishAll.Enabled = true;
                     tsbSaveViews.Enabled = true;
-                    tsbLoadEntities.Enabled = true;
+                    tssbLoadAllEntities.Enabled = true;
                 }
             });
+        }
+
+        private void tssbLoadAllEntities_ButtonClick(object sender, EventArgs e)
+        {
+            LoadEntities();
+        }
+
+        private void tssbLoadAllEntities_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            if (e.ClickedItem == tsmiLoadFromSolution)
+            {
+                LoadEntities(true);
+            }
         }
     }
 }

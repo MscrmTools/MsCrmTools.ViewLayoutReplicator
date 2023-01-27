@@ -6,6 +6,8 @@
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
+using Microsoft.Xrm.Sdk.Metadata.Query;
+using Microsoft.Xrm.Sdk.Query;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -78,10 +80,10 @@ namespace MsCrmTools.ViewLayoutReplicator.Helpers
             List<EntityMetadata> entities = new List<EntityMetadata>();
 
             RetrieveAllEntitiesRequest request = new RetrieveAllEntitiesRequest
-                                                     {
-                                                         RetrieveAsIfPublished = true,
-                                                         EntityFilters = EntityFilters.Entity
-                                                     };
+            {
+                RetrieveAsIfPublished = true,
+                EntityFilters = EntityFilters.Entity
+            };
 
             RetrieveAllEntitiesResponse response = (RetrieveAllEntitiesResponse)oService.Execute(request);
 
@@ -96,15 +98,95 @@ namespace MsCrmTools.ViewLayoutReplicator.Helpers
             return entities;
         }
 
+        public static List<EntityMetadata> RetrieveEntities(IOrganizationService oService, Guid solutionId)
+        {
+            List<EntityMetadata> entities = new List<EntityMetadata>();
+
+            if (solutionId == Guid.Empty)
+            {
+                RetrieveAllEntitiesRequest request = new RetrieveAllEntitiesRequest
+                {
+                    EntityFilters = EntityFilters.Entity
+                };
+
+                RetrieveAllEntitiesResponse response = (RetrieveAllEntitiesResponse)oService.Execute(request);
+
+                foreach (EntityMetadata emd in response.EntityMetadata)
+                {
+                    if (emd.DisplayName?.UserLocalizedLabel != null &&
+                        (emd.IsCustomizable.Value || emd.IsManaged.Value == false))
+                    {
+                        entities.Add(emd);
+                    }
+                }
+            }
+            else
+            {
+                var components = oService.RetrieveMultiple(new QueryExpression("solutioncomponent")
+                {
+                    ColumnSet = new ColumnSet("objectid"),
+                    NoLock = true,
+                    Criteria = new FilterExpression
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression("solutionid", ConditionOperator.Equal, solutionId),
+                            new ConditionExpression("componenttype", ConditionOperator.Equal, 1)
+                        }
+                    }
+                }).Entities;
+
+                var list = components.Select(component => component.GetAttributeValue<Guid>("objectid"))
+                    .ToList();
+
+                if (list.Count > 0)
+                {
+                    int i = 0;
+                    List<Guid> metadataIds = list.Take(100).ToList();
+                    do
+                    {
+                        EntityQueryExpression entityQueryExpression = new EntityQueryExpression
+                        {
+                            Criteria = new MetadataFilterExpression(LogicalOperator.Or),
+                            Properties = new MetadataPropertiesExpression
+                            {
+                                AllProperties = false,
+                                PropertyNames = { "DisplayName", "LogicalName", "ObjectTypeCode" }
+                            }
+                        };
+
+                        metadataIds.ForEach(id =>
+                        {
+                            entityQueryExpression.Criteria.Conditions.Add(new MetadataConditionExpression("MetadataId", MetadataConditionOperator.Equals, id));
+                        });
+
+                        RetrieveMetadataChangesRequest retrieveMetadataChangesRequest = new RetrieveMetadataChangesRequest
+                        {
+                            Query = entityQueryExpression,
+                            ClientVersionStamp = null
+                        };
+
+                        var response = (RetrieveMetadataChangesResponse)oService.Execute(retrieveMetadataChangesRequest);
+                        entities.AddRange(response.EntityMetadata);
+                        i++;
+                        metadataIds = list.Skip(i * 100).Take(100).ToList();
+                    }
+                    while (metadataIds.Count > 0);
+                }
+            }
+
+            return entities;
+        }
+
         public static EntityMetadata RetrieveEntity(string logicalName, IOrganizationService oService)
         {
             try
             {
                 RetrieveEntityRequest request = new RetrieveEntityRequest
-                                                    {
-                                                        LogicalName = logicalName,
-                                                        EntityFilters = EntityFilters.Attributes | EntityFilters.Relationships
-                                                    };
+                {
+                    LogicalName = logicalName,
+                    EntityFilters = EntityFilters.Attributes | EntityFilters.Relationships
+                };
 
                 RetrieveEntityResponse response = (RetrieveEntityResponse)oService.Execute(request);
 

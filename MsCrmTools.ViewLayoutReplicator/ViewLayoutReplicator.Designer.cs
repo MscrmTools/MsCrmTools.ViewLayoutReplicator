@@ -49,7 +49,6 @@
             this.tsMain = new System.Windows.Forms.ToolStrip();
             this.tsbCloseThisTab = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbLoadEntities = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbSaveViews = new System.Windows.Forms.ToolStripButton();
             this.tsbPublishEntity = new System.Windows.Forms.ToolStripButton();
@@ -63,6 +62,8 @@
             this.allViewName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.allViewType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvSourceViewLayoutPreview = new System.Windows.Forms.ListView();
+            this.tssbLoadAllEntities = new System.Windows.Forms.ToolStripSplitButton();
+            this.tsmiLoadFromSolution = new System.Windows.Forms.ToolStripMenuItem();
             this.gbEntities.SuspendLayout();
             this.gbTargetViews.SuspendLayout();
             this.pnlTargetViewsOptions.SuspendLayout();
@@ -92,7 +93,7 @@
             this.gbEntities.Size = new System.Drawing.Size(420, 756);
             this.gbEntities.TabIndex = 89;
             this.gbEntities.TabStop = false;
-            this.gbEntities.Text = "Entities";
+            this.gbEntities.Text = "Tables";
             // 
             // lblSearchEntity
             // 
@@ -270,7 +271,7 @@
             this.tsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsbCloseThisTab,
             this.toolStripSeparator2,
-            this.tsbLoadEntities,
+            this.tssbLoadAllEntities,
             this.toolStripSeparator1,
             this.tsbSaveViews,
             this.tsbPublishEntity,
@@ -297,15 +298,6 @@
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 38);
             // 
-            // tsbLoadEntities
-            // 
-            this.tsbLoadEntities.Image = ((System.Drawing.Image)(resources.GetObject("tsbLoadEntities.Image")));
-            this.tsbLoadEntities.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbLoadEntities.Name = "tsbLoadEntities";
-            this.tsbLoadEntities.Size = new System.Drawing.Size(140, 33);
-            this.tsbLoadEntities.Text = "Load Entities";
-            this.tsbLoadEntities.Click += new System.EventHandler(this.TsbLoadEntitiesClick);
-            // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
@@ -328,7 +320,7 @@
             this.tsbPublishEntity.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbPublishEntity.Name = "tsbPublishEntity";
             this.tsbPublishEntity.Size = new System.Drawing.Size(146, 33);
-            this.tsbPublishEntity.Text = "Publish entity";
+            this.tsbPublishEntity.Text = "Publish table";
             this.tsbPublishEntity.Click += new System.EventHandler(this.TsbPublishEntityClick);
             // 
             // toolStripSeparator3
@@ -447,6 +439,25 @@
             this.lvSourceViewLayoutPreview.UseCompatibleStateImageBehavior = false;
             this.lvSourceViewLayoutPreview.View = System.Windows.Forms.View.Details;
             // 
+            // tssbLoadAllEntities
+            // 
+            this.tssbLoadAllEntities.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiLoadFromSolution});
+            this.tssbLoadAllEntities.Image = global::MsCrmTools.ViewLayoutReplicator.Properties.Resources.Dataverse_16x16;
+            this.tssbLoadAllEntities.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tssbLoadAllEntities.Name = "tssbLoadAllEntities";
+            this.tssbLoadAllEntities.Size = new System.Drawing.Size(149, 33);
+            this.tssbLoadAllEntities.Text = "Load Tables";
+            this.tssbLoadAllEntities.ButtonClick += new System.EventHandler(this.tssbLoadAllEntities_ButtonClick);
+            this.tssbLoadAllEntities.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tssbLoadAllEntities_DropDownItemClicked);
+            // 
+            // tsmiLoadFromSolution
+            // 
+            this.tsmiLoadFromSolution.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsmiLoadFromSolution.Name = "tsmiLoadFromSolution";
+            this.tsmiLoadFromSolution.Size = new System.Drawing.Size(319, 34);
+            this.tsmiLoadFromSolution.Text = "Load Tables from solution";
+            // 
             // ViewLayoutReplicator
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -482,7 +493,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.GroupBox gbTargetViews;
         private System.Windows.Forms.ToolStrip tsMain;
-        private System.Windows.Forms.ToolStripButton tsbLoadEntities;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripButton tsbSaveViews;
         private System.Windows.Forms.ToolStripButton tsbPublishEntity;
@@ -510,5 +520,7 @@
         private System.Windows.Forms.CheckBox chkShowSystem;
         private System.Windows.Forms.CheckBox chkCopySortOrder;
         private System.Windows.Forms.CheckBox chkCopyLayout;
+        private System.Windows.Forms.ToolStripSplitButton tssbLoadAllEntities;
+        private System.Windows.Forms.ToolStripMenuItem tsmiLoadFromSolution;
     }
 }

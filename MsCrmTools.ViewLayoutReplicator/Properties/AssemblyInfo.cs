@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // l'ensemble d'attributs suivant. Changez les valeurs de ces attributs pour modifier les informations
 // associées à un assembly.
 [assembly: AssemblyTitle("View Layout Replicator")]
-[assembly: AssemblyDescription("Apply same layout to multiple views of the same entity in a single operation")]
+[assembly: AssemblyDescription("Apply same layout to multiple views of the same table in a single operation")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MscrmTools")]
 [assembly: AssemblyProduct("MsCrmTools.ViewLayoutReplicator")]
