@@ -12,9 +12,7 @@
     <description>Apply same layout to multiple views of the same entity in a single operation</description>
     <summary>Apply same layout to multiple views of the same entity in a single operation</summary>
     <releaseNotes>
-      Display sorting in view definition
-      Separate layout and sort order options so that you can propagate only the sorting if needed
-      Added solution picker to load only tables from a specific solution
+      Fixed NullReferenceException when a column does not have width set in LayoutXml
     </releaseNotes>
     <tags>XrmToolBox Plugin ViewLayoutReplicator</tags>
     <dependencies>

@@ -444,7 +444,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                         {
                             ColumnHeader header = new ColumnHeader();
 
-                            header.Width = int.Parse(columnNode.Attributes["width"].Value);
+                            header.Width = columnNode.Attributes["width"] == null ? 150 : int.Parse(columnNode.Attributes["width"].Value);
                             header.Text = MetadataHelper.RetrieveAttributeDisplayName(emdWithItems,
                                                                                       columnNode.Attributes["name"].Value,
                                                                                       fetchXml, Service);
@@ -457,9 +457,9 @@ namespace MsCrmTools.ViewLayoutReplicator
                             headers.Add(header);
 
                             if (string.IsNullOrEmpty(item.Text))
-                                item.Text = columnNode.Attributes["width"].Value + "px";
+                                item.Text = header.Width + "px";
                             else
-                                item.SubItems.Add(columnNode.Attributes["width"].Value + "px");
+                                item.SubItems.Add(header.Width + "px");
                         }
 
                         evt.Result = new object[] { headers, item };
