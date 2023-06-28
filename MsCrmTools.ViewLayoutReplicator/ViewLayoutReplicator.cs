@@ -120,6 +120,8 @@ namespace MsCrmTools.ViewLayoutReplicator
 
         private void SaveViews(bool publish = false)
         {
+            if (lvSourceViews.SelectedItems.Count == 0) return;
+
             var targetViews = lvTargetViews.CheckedItems.Cast<ListViewItem>().Select(i => new ViewDefinition((Entity)i.Tag)).ToList();
             var sourceView = new ViewDefinition((Entity)lvSourceViews.SelectedItems.Cast<ListViewItem>().First().Tag);
 
@@ -592,7 +594,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                 lvEntities.BeginUpdate();
                 lvEntities.Items.Clear();
                 var filteredItems = listViewItemsCache
-                    .Where(item => item.Text.StartsWith(entityName, StringComparison.OrdinalIgnoreCase))
+                    .Where(i => i.SubItems.Cast<ListViewItem.ListViewSubItem>().Any(si => si.Text.IndexOf(entityName, StringComparison.InvariantCultureIgnoreCase) >= 0))
                     .ToArray();
                 lvEntities.Items.AddRange(filteredItems);
                 lvEntities.EndUpdate();
