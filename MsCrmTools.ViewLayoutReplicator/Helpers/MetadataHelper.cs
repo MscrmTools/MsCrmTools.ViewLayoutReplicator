@@ -151,7 +151,7 @@ namespace MsCrmTools.ViewLayoutReplicator.Helpers
                             Properties = new MetadataPropertiesExpression
                             {
                                 AllProperties = false,
-                                PropertyNames = { "DisplayName", "LogicalName", "ObjectTypeCode" }
+                                PropertyNames = { "DisplayName", "LogicalName", "ObjectTypeCode", "IsIntersect" }
                             }
                         };
 
@@ -167,7 +167,7 @@ namespace MsCrmTools.ViewLayoutReplicator.Helpers
                         };
 
                         var response = (RetrieveMetadataChangesResponse)oService.Execute(retrieveMetadataChangesRequest);
-                        entities.AddRange(response.EntityMetadata);
+                        entities.AddRange(response.EntityMetadata.Where(e => !(e.IsIntersect ?? false)));
                         i++;
                         metadataIds = list.Skip(i * 100).Take(100).ToList();
                     }

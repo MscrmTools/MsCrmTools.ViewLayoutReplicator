@@ -97,7 +97,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                         var list = new List<ListViewItem>();
                         foreach (EntityMetadata emd in (List<EntityMetadata>)e.Result)
                         {
-                            var item = new ListViewItem { Text = emd.DisplayName.UserLocalizedLabel.Label, Tag = emd.LogicalName };
+                            var item = new ListViewItem { Text = emd.DisplayName.UserLocalizedLabel?.Label ?? "N/A", Tag = emd.LogicalName };
                             item.SubItems.Add(emd.LogicalName);
                             list.Add(item);
                         }
