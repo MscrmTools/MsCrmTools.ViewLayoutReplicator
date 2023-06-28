@@ -267,6 +267,10 @@
     <Content Include="Images\ico_16_1039_quickFind.gif" />
     <Content Include="Images\ico_16_publishCustomizations.gif" />
     <Content Include="Images\Title.png" />
+    <None Include="Resources\Dataverse.32x32.png" />
+    <None Include="Resources\publishing32.png" />
+    <None Include="Resources\diskette32.png" />
+    <None Include="Resources\rocket32.png" />
     <None Include="Resources\Dataverse_16x16.png" />
   </ItemGroup>
   <ItemGroup>
@@ -304,7 +308,7 @@
   </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
-      <UserProperties BuildVersion_UpdateFileVersion="True" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_BuildVersioningStyle="None.YearStamp.MonthStamp.DayStamp" BuildVersion_ConfigurationName="Release" />
+      <UserProperties BuildVersion_ConfigurationName="Release" BuildVersion_BuildVersioningStyle="None.YearStamp.MonthStamp.DayStamp" BuildVersion_UpdateAssemblyVersion="True" BuildVersion_UpdateFileVersion="True" />
     </VisualStudio>
   </ProjectExtensions>
   <Import Project="..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets" Condition="Exists('..\packages\Microsoft.Web.WebView2.1.0.1343.22\build\Microsoft.Web.WebView2.targets')" />

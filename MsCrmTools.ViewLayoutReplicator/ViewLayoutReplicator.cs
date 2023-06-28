@@ -69,6 +69,7 @@ namespace MsCrmTools.ViewLayoutReplicator
             tsbPublishEntity.Enabled = false;
             tsbPublishAll.Enabled = false;
             tsbSaveViews.Enabled = false;
+            tsbSaveAndPublish.Enabled = false;
 
             lvSourceViews.Items.Clear();
             lvTargetViews.Items.Clear();
@@ -117,7 +118,7 @@ namespace MsCrmTools.ViewLayoutReplicator
 
         #region Save Views
 
-        private void TsbSaveViewsClick(object sender, EventArgs e)
+        private void SaveViews(bool publish = false)
         {
             var targetViews = lvTargetViews.CheckedItems.Cast<ListViewItem>().Select(i => new ViewDefinition((Entity)i.Tag)).ToList();
             var sourceView = new ViewDefinition((Entity)lvSourceViews.SelectedItems.Cast<ListViewItem>().First().Tag);
@@ -162,6 +163,7 @@ namespace MsCrmTools.ViewLayoutReplicator
             tsbPublishAll.Enabled = false;
             tsbSaveViews.Enabled = false;
             tssbLoadAllEntities.Enabled = false;
+            tsbSaveAndPublish.Enabled = false;
 
             WorkAsync(new WorkAsyncInfo
             {
@@ -178,14 +180,24 @@ namespace MsCrmTools.ViewLayoutReplicator
                     {
                         var errorDialog = new ErrorList((List<Tuple<string, string>>)evt.Result);
                         errorDialog.ShowDialog(this);
-                    }
 
-                    tsbPublishEntity.Enabled = true;
-                    tsbPublishAll.Enabled = true;
-                    tsbSaveViews.Enabled = true;
-                    tssbLoadAllEntities.Enabled = true;
+                        tsbPublishEntity.Enabled = true;
+                        tsbPublishAll.Enabled = true;
+                        tsbSaveViews.Enabled = true;
+                        tssbLoadAllEntities.Enabled = true;
+                        tsbSaveAndPublish.Enabled = true;
+                    }
+                    else if (publish)
+                    {
+                        TsbPublishEntityClick(tsbPublishEntity, new EventArgs());
+                    }
                 }
             });
+        }
+
+        private void TsbSaveViewsClick(object sender, EventArgs e)
+        {
+            SaveViews();
         }
 
         #endregion Save Views
@@ -200,6 +212,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                 tsbPublishAll.Enabled = false;
                 tsbSaveViews.Enabled = false;
                 tssbLoadAllEntities.Enabled = false;
+                tsbSaveAndPublish.Enabled = false;
 
                 WorkAsync(new WorkAsyncInfo
                 {
@@ -231,6 +244,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                         tsbPublishAll.Enabled = true;
                         tsbSaveViews.Enabled = true;
                         tssbLoadAllEntities.Enabled = true;
+                        tsbSaveAndPublish.Enabled = true;
                     }
                 });
             }
@@ -500,11 +514,13 @@ namespace MsCrmTools.ViewLayoutReplicator
             {
                 tsbSaveViews.Enabled = true;
                 tsbPublishEntity.Enabled = true;
+                tsbSaveAndPublish.Enabled = true;
             }
             else
             {
                 tsbSaveViews.Enabled = false;
                 tsbPublishEntity.Enabled = false;
+                tsbSaveAndPublish.Enabled = false;
             }
         }
 
@@ -583,17 +599,13 @@ namespace MsCrmTools.ViewLayoutReplicator
             }
         }
 
-        private void TsbCloseThisTabClick(object sender, EventArgs e)
-        {
-            CloseTool();
-        }
-
         private void TsbPublishAllClick(object sender, EventArgs e)
         {
             tsbPublishEntity.Enabled = false;
             tsbPublishAll.Enabled = false;
             tsbSaveViews.Enabled = false;
             tssbLoadAllEntities.Enabled = false;
+            tsbSaveAndPublish.Enabled = false;
 
             WorkAsync(new WorkAsyncInfo
             {
@@ -617,8 +629,14 @@ namespace MsCrmTools.ViewLayoutReplicator
                     tsbPublishAll.Enabled = true;
                     tsbSaveViews.Enabled = true;
                     tssbLoadAllEntities.Enabled = true;
+                    tsbSaveAndPublish.Enabled = true;
                 }
             });
+        }
+
+        private void tsbSaveAndPublish_Click(object sender, EventArgs e)
+        {
+            SaveViews(true);
         }
 
         private void tssbLoadAllEntities_ButtonClick(object sender, EventArgs e)

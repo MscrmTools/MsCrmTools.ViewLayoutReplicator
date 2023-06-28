@@ -47,13 +47,8 @@
             this.chkShowUser = new System.Windows.Forms.CheckBox();
             this.chkShowSystem = new System.Windows.Forms.CheckBox();
             this.tsMain = new System.Windows.Forms.ToolStrip();
-            this.tsbCloseThisTab = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbSaveViews = new System.Windows.Forms.ToolStripButton();
-            this.tsbPublishEntity = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsbPublishAll = new System.Windows.Forms.ToolStripButton();
             this.imageList2 = new System.Windows.Forms.ImageList(this.components);
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
@@ -64,6 +59,10 @@
             this.lvSourceViewLayoutPreview = new System.Windows.Forms.ListView();
             this.tssbLoadAllEntities = new System.Windows.Forms.ToolStripSplitButton();
             this.tsmiLoadFromSolution = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsbSaveViews = new System.Windows.Forms.ToolStripButton();
+            this.tsbPublishEntity = new System.Windows.Forms.ToolStripButton();
+            this.tsbSaveAndPublish = new System.Windows.Forms.ToolStripButton();
+            this.tsbPublishAll = new System.Windows.Forms.ToolStripButton();
             this.gbEntities.SuspendLayout();
             this.gbTargetViews.SuspendLayout();
             this.pnlTargetViewsOptions.SuspendLayout();
@@ -90,7 +89,7 @@
             this.gbEntities.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gbEntities.Name = "gbEntities";
             this.gbEntities.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gbEntities.Size = new System.Drawing.Size(420, 756);
+            this.gbEntities.Size = new System.Drawing.Size(420, 753);
             this.gbEntities.TabIndex = 89;
             this.gbEntities.TabStop = false;
             this.gbEntities.Text = "Tables";
@@ -129,7 +128,7 @@
             this.lvEntities.Location = new System.Drawing.Point(9, 65);
             this.lvEntities.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvEntities.Name = "lvEntities";
-            this.lvEntities.Size = new System.Drawing.Size(400, 685);
+            this.lvEntities.Size = new System.Drawing.Size(400, 682);
             this.lvEntities.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvEntities.TabIndex = 79;
             this.lvEntities.UseCompatibleStateImageBehavior = false;
@@ -157,7 +156,7 @@
             this.gbTargetViews.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gbTargetViews.Name = "gbTargetViews";
             this.gbTargetViews.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gbTargetViews.Size = new System.Drawing.Size(842, 407);
+            this.gbTargetViews.Size = new System.Drawing.Size(842, 406);
             this.gbTargetViews.TabIndex = 87;
             this.gbTargetViews.TabStop = false;
             this.gbTargetViews.Text = "Target Views";
@@ -173,7 +172,7 @@
             this.lvTargetViews.Location = new System.Drawing.Point(4, 63);
             this.lvTargetViews.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvTargetViews.Name = "lvTargetViews";
-            this.lvTargetViews.Size = new System.Drawing.Size(834, 339);
+            this.lvTargetViews.Size = new System.Drawing.Size(834, 338);
             this.lvTargetViews.SmallImageList = this.imageList1;
             this.lvTargetViews.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvTargetViews.TabIndex = 80;
@@ -267,76 +266,30 @@
             // 
             // tsMain
             // 
-            this.tsMain.AutoSize = false;
+            this.tsMain.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.tsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsbCloseThisTab,
-            this.toolStripSeparator2,
             this.tssbLoadAllEntities,
             this.toolStripSeparator1,
             this.tsbSaveViews,
             this.tsbPublishEntity,
+            this.tsbSaveAndPublish,
             this.toolStripSeparator3,
             this.tsbPublishAll});
             this.tsMain.Location = new System.Drawing.Point(0, 0);
             this.tsMain.Name = "tsMain";
-            this.tsMain.Size = new System.Drawing.Size(1266, 38);
+            this.tsMain.Size = new System.Drawing.Size(1266, 41);
             this.tsMain.TabIndex = 85;
-            this.tsMain.Text = "toolStrip1";
-            // 
-            // tsbCloseThisTab
-            // 
-            this.tsbCloseThisTab.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbCloseThisTab.Image = ((System.Drawing.Image)(resources.GetObject("tsbCloseThisTab.Image")));
-            this.tsbCloseThisTab.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCloseThisTab.Name = "tsbCloseThisTab";
-            this.tsbCloseThisTab.Size = new System.Drawing.Size(34, 33);
-            this.tsbCloseThisTab.Text = "Close this tab";
-            this.tsbCloseThisTab.Click += new System.EventHandler(this.TsbCloseThisTabClick);
-            // 
-            // toolStripSeparator2
-            // 
-            this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(6, 38);
+            this.tsMain.Text = "tsMain";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
             this.toolStripSeparator1.Size = new System.Drawing.Size(6, 38);
             // 
-            // tsbSaveViews
-            // 
-            this.tsbSaveViews.Enabled = false;
-            this.tsbSaveViews.Image = ((System.Drawing.Image)(resources.GetObject("tsbSaveViews.Image")));
-            this.tsbSaveViews.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbSaveViews.Name = "tsbSaveViews";
-            this.tsbSaveViews.Size = new System.Drawing.Size(125, 33);
-            this.tsbSaveViews.Text = "Save views";
-            this.tsbSaveViews.Click += new System.EventHandler(this.TsbSaveViewsClick);
-            // 
-            // tsbPublishEntity
-            // 
-            this.tsbPublishEntity.Enabled = false;
-            this.tsbPublishEntity.Image = ((System.Drawing.Image)(resources.GetObject("tsbPublishEntity.Image")));
-            this.tsbPublishEntity.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbPublishEntity.Name = "tsbPublishEntity";
-            this.tsbPublishEntity.Size = new System.Drawing.Size(146, 33);
-            this.tsbPublishEntity.Text = "Publish table";
-            this.tsbPublishEntity.Click += new System.EventHandler(this.TsbPublishEntityClick);
-            // 
             // toolStripSeparator3
             // 
             this.toolStripSeparator3.Name = "toolStripSeparator3";
             this.toolStripSeparator3.Size = new System.Drawing.Size(6, 38);
-            // 
-            // tsbPublishAll
-            // 
-            this.tsbPublishAll.Enabled = false;
-            this.tsbPublishAll.Image = ((System.Drawing.Image)(resources.GetObject("tsbPublishAll.Image")));
-            this.tsbPublishAll.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbPublishAll.Name = "tsbPublishAll";
-            this.tsbPublishAll.Size = new System.Drawing.Size(119, 33);
-            this.tsbPublishAll.Text = "Publish all";
-            this.tsbPublishAll.Click += new System.EventHandler(this.TsbPublishAllClick);
             // 
             // imageList2
             // 
@@ -347,7 +300,7 @@
             // splitContainer1
             // 
             this.splitContainer1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.splitContainer1.Location = new System.Drawing.Point(0, 38);
+            this.splitContainer1.Location = new System.Drawing.Point(0, 41);
             this.splitContainer1.Name = "splitContainer1";
             // 
             // splitContainer1.Panel1
@@ -357,7 +310,7 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer2);
-            this.splitContainer1.Size = new System.Drawing.Size(1266, 756);
+            this.splitContainer1.Size = new System.Drawing.Size(1266, 753);
             this.splitContainer1.SplitterDistance = 420;
             this.splitContainer1.TabIndex = 90;
             // 
@@ -375,8 +328,8 @@
             // splitContainer2.Panel2
             // 
             this.splitContainer2.Panel2.Controls.Add(this.gbTargetViews);
-            this.splitContainer2.Size = new System.Drawing.Size(842, 756);
-            this.splitContainer2.SplitterDistance = 344;
+            this.splitContainer2.Size = new System.Drawing.Size(842, 753);
+            this.splitContainer2.SplitterDistance = 342;
             this.splitContainer2.SplitterWidth = 5;
             this.splitContainer2.TabIndex = 0;
             // 
@@ -390,7 +343,7 @@
             this.gbSourceViews.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.gbSourceViews.Name = "gbSourceViews";
             this.gbSourceViews.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.gbSourceViews.Size = new System.Drawing.Size(842, 344);
+            this.gbSourceViews.Size = new System.Drawing.Size(842, 342);
             this.gbSourceViews.TabIndex = 89;
             this.gbSourceViews.TabStop = false;
             this.gbSourceViews.Text = "Source Views";
@@ -406,7 +359,7 @@
             this.lvSourceViews.Location = new System.Drawing.Point(4, 24);
             this.lvSourceViews.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvSourceViews.Name = "lvSourceViews";
-            this.lvSourceViews.Size = new System.Drawing.Size(834, 214);
+            this.lvSourceViews.Size = new System.Drawing.Size(834, 212);
             this.lvSourceViews.SmallImageList = this.imageList1;
             this.lvSourceViews.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvSourceViews.TabIndex = 68;
@@ -431,7 +384,7 @@
             this.lvSourceViewLayoutPreview.ForeColor = System.Drawing.Color.Black;
             this.lvSourceViewLayoutPreview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSourceViewLayoutPreview.HideSelection = false;
-            this.lvSourceViewLayoutPreview.Location = new System.Drawing.Point(4, 238);
+            this.lvSourceViewLayoutPreview.Location = new System.Drawing.Point(4, 236);
             this.lvSourceViewLayoutPreview.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.lvSourceViewLayoutPreview.Name = "lvSourceViewLayoutPreview";
             this.lvSourceViewLayoutPreview.Size = new System.Drawing.Size(834, 101);
@@ -443,10 +396,10 @@
             // 
             this.tssbLoadAllEntities.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmiLoadFromSolution});
-            this.tssbLoadAllEntities.Image = global::MsCrmTools.ViewLayoutReplicator.Properties.Resources.Dataverse_16x16;
+            this.tssbLoadAllEntities.Image = global::MsCrmTools.ViewLayoutReplicator.Properties.Resources.Dataverse_32x32;
             this.tssbLoadAllEntities.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tssbLoadAllEntities.Name = "tssbLoadAllEntities";
-            this.tssbLoadAllEntities.Size = new System.Drawing.Size(149, 33);
+            this.tssbLoadAllEntities.Size = new System.Drawing.Size(157, 33);
             this.tssbLoadAllEntities.Text = "Load Tables";
             this.tssbLoadAllEntities.ButtonClick += new System.EventHandler(this.tssbLoadAllEntities_ButtonClick);
             this.tssbLoadAllEntities.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tssbLoadAllEntities_DropDownItemClicked);
@@ -457,6 +410,46 @@
             this.tsmiLoadFromSolution.Name = "tsmiLoadFromSolution";
             this.tsmiLoadFromSolution.Size = new System.Drawing.Size(319, 34);
             this.tsmiLoadFromSolution.Text = "Load Tables from solution";
+            // 
+            // tsbSaveViews
+            // 
+            this.tsbSaveViews.Enabled = false;
+            this.tsbSaveViews.Image = global::MsCrmTools.ViewLayoutReplicator.Properties.Resources.diskette32;
+            this.tsbSaveViews.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSaveViews.Name = "tsbSaveViews";
+            this.tsbSaveViews.Size = new System.Drawing.Size(133, 33);
+            this.tsbSaveViews.Text = "Save views";
+            this.tsbSaveViews.Click += new System.EventHandler(this.TsbSaveViewsClick);
+            // 
+            // tsbPublishEntity
+            // 
+            this.tsbPublishEntity.Enabled = false;
+            this.tsbPublishEntity.Image = global::MsCrmTools.ViewLayoutReplicator.Properties.Resources.publishing32;
+            this.tsbPublishEntity.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbPublishEntity.Name = "tsbPublishEntity";
+            this.tsbPublishEntity.Size = new System.Drawing.Size(149, 33);
+            this.tsbPublishEntity.Text = "Publish table";
+            this.tsbPublishEntity.Click += new System.EventHandler(this.TsbPublishEntityClick);
+            // 
+            // tsbSaveAndPublish
+            // 
+            this.tsbSaveAndPublish.Enabled = false;
+            this.tsbSaveAndPublish.Image = global::MsCrmTools.ViewLayoutReplicator.Properties.Resources.rocket32;
+            this.tsbSaveAndPublish.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbSaveAndPublish.Name = "tsbSaveAndPublish";
+            this.tsbSaveAndPublish.Size = new System.Drawing.Size(183, 33);
+            this.tsbSaveAndPublish.Text = "Save and publish";
+            this.tsbSaveAndPublish.Click += new System.EventHandler(this.tsbSaveAndPublish_Click);
+            // 
+            // tsbPublishAll
+            // 
+            this.tsbPublishAll.Enabled = false;
+            this.tsbPublishAll.Image = global::MsCrmTools.ViewLayoutReplicator.Properties.Resources.publishing32;
+            this.tsbPublishAll.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbPublishAll.Name = "tsbPublishAll";
+            this.tsbPublishAll.Size = new System.Drawing.Size(127, 33);
+            this.tsbPublishAll.Text = "Publish all";
+            this.tsbPublishAll.Click += new System.EventHandler(this.TsbPublishAllClick);
             // 
             // ViewLayoutReplicator
             // 
@@ -483,6 +476,7 @@
             this.splitContainer2.ResumeLayout(false);
             this.gbSourceViews.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -499,8 +493,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ImageList imageList1;
         private System.Windows.Forms.ImageList imageList2;
-        private System.Windows.Forms.ToolStripButton tsbCloseThisTab;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
         private System.Windows.Forms.ToolStripButton tsbPublishAll;
         private System.Windows.Forms.SplitContainer splitContainer1;
@@ -522,5 +514,6 @@
         private System.Windows.Forms.CheckBox chkCopyLayout;
         private System.Windows.Forms.ToolStripSplitButton tssbLoadAllEntities;
         private System.Windows.Forms.ToolStripMenuItem tsmiLoadFromSolution;
+        private System.Windows.Forms.ToolStripButton tsbSaveAndPublish;
     }
 }
