@@ -12,7 +12,9 @@
     <description>Apply same layout to multiple views of the same entity in a single operation</description>
     <summary>Apply same layout to multiple views of the same entity in a single operation</summary>
     <releaseNotes>
-      Fixed NullReferenceException when a column does not have width set in LayoutXml
+      Fixed retrieval of tables by solution when the solution contains an intersect table
+      Fixed search with table logical name in tables list
+      Added Save and publsih feature to speed up process of saving and publishing table views
     </releaseNotes>
     <tags>XrmToolBox Plugin ViewLayoutReplicator</tags>
     <dependencies>
