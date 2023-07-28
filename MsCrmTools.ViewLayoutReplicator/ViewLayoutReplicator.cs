@@ -182,17 +182,17 @@ namespace MsCrmTools.ViewLayoutReplicator
                     {
                         var errorDialog = new ErrorList((List<Tuple<string, string>>)evt.Result);
                         errorDialog.ShowDialog(this);
-
-                        tsbPublishEntity.Enabled = true;
-                        tsbPublishAll.Enabled = true;
-                        tsbSaveViews.Enabled = true;
-                        tssbLoadAllEntities.Enabled = true;
-                        tsbSaveAndPublish.Enabled = true;
                     }
                     else if (publish)
                     {
                         TsbPublishEntityClick(tsbPublishEntity, new EventArgs());
                     }
+
+                    tsbPublishEntity.Enabled = true;
+                    tsbPublishAll.Enabled = true;
+                    tsbSaveViews.Enabled = true;
+                    tssbLoadAllEntities.Enabled = true;
+                    tsbSaveAndPublish.Enabled = true;
                 }
             });
         }
