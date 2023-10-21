@@ -494,6 +494,11 @@ namespace MsCrmTools.ViewLayoutReplicator
                             lvSourceViewLayoutPreview.Columns.AddRange(((List<ColumnHeader>)args[0]).ToArray());
                             lvSourceViewLayoutPreview.Items.Add((ListViewItem)args[1]);
                             lvSourceViewLayoutPreview.Enabled = true;
+
+                            foreach (ListViewItem item in lvTargetViews.Items)
+                            {
+                                item.Checked = ((Entity)item.Tag).GetAttributeValue<BooleanManagedProperty>("iscustomizable").Value && ((Entity)item.Tag).Id != ((Entity)lvSourceViews.SelectedItems[0].Tag).Id;
+                            }
                         }
 
                         lvSourceViews.SelectedIndexChanged += LvSourceViewsSelectedIndexChanged;
@@ -559,6 +564,14 @@ namespace MsCrmTools.ViewLayoutReplicator
             lvTargetViews.Items.Clear();
 
             lvTargetViews.Items.AddRange(filteredViews.ToArray());
+        }
+
+        private void llClearSelection_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            foreach (ListViewItem item in lvTargetViews.Items)
+            {
+                item.Checked = false;
+            }
         }
 
         private void LvEntitiesColumnClick(object sender, ColumnClickEventArgs e)
