@@ -497,7 +497,7 @@ namespace MsCrmTools.ViewLayoutReplicator
 
                             foreach (ListViewItem item in lvTargetViews.Items)
                             {
-                                item.Checked = ((Entity)item.Tag).GetAttributeValue<BooleanManagedProperty>("iscustomizable").Value && ((Entity)item.Tag).Id != ((Entity)lvSourceViews.SelectedItems[0].Tag).Id;
+                                item.Checked = (((Entity)item.Tag).LogicalName == "savedquery" && ((Entity)item.Tag).GetAttributeValue<BooleanManagedProperty>("iscustomizable").Value || ((Entity)item.Tag).LogicalName == "userquery") && ((Entity)item.Tag).Id != ((Entity)lvSourceViews.SelectedItems[0].Tag).Id;
                             }
                         }
 
