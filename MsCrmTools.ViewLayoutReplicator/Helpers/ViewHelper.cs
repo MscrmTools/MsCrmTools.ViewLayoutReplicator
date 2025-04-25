@@ -36,7 +36,7 @@ namespace MsCrmTools.ViewLayoutReplicator.Helpers
         /// <param name="includeSorting">Indicates if sorting must be included in replication operation</param>
         /// <param name="service">Crm organization service</param>
         /// <returns>Indicates if all views have been updated</returns>
-        public static List<Tuple<string, string>> PropagateLayout(ViewDefinition sourceView, List<ViewDefinition> targetViews, bool includeLayout, bool includeSorting, IOrganizationService service)
+        public static List<Tuple<string, string>> PropagateLayout(ViewDefinition sourceView, List<ViewDefinition> targetViews, bool includeLayout, bool includeSorting, bool includeComponents, IOrganizationService service)
         {
             var errors = new List<Tuple<string, string>>();
             string multiObjectAttribute = string.Empty;
@@ -80,6 +80,30 @@ namespace MsCrmTools.ViewLayoutReplicator.Helpers
                                     XmlNode nodeDest = targetLayout.ImportNode(cellNode.Clone(), true);
                                     targetLayout.SelectSingleNode("grid/row").AppendChild(nodeDest);
                                 }
+                            }
+
+                            targetView.LayoutXml = targetLayout.OuterXml;
+                        }
+
+                        if (includeComponents
+                            && targetView.Type != VIEW_ADVANCEDFIND
+                            && targetView.Type != VIEW_SEARCH
+                            && targetView.Type != VIEW_QUICKFIND
+                            )
+                        {
+                            XmlNode targetGridNode = targetLayout.SelectSingleNode("grid");
+                            XmlNode targetCdNode = targetGridNode.SelectSingleNode("controlDescriptions");
+                            if (targetCdNode != null)
+                            {
+                                targetGridNode.RemoveChild(targetCdNode);
+                            }
+
+                            XmlNode sourceComponentsNode = sourceLayout.SelectSingleNode("grid/controlDescriptions");
+                            if (sourceComponentsNode != null)
+                            {
+                                XmlNode nodeDest = targetLayout.ImportNode(sourceComponentsNode.Clone(), true);
+
+                                targetGridNode.AppendChild(nodeDest);
                             }
 
                             targetView.LayoutXml = targetLayout.OuterXml;

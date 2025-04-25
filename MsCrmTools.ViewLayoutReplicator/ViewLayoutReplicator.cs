@@ -170,11 +170,11 @@ namespace MsCrmTools.ViewLayoutReplicator
             WorkAsync(new WorkAsyncInfo
             {
                 Message = "Saving views...",
-                AsyncArgument = new object[] { sourceView, targetViews, chkCopyLayout.Checked, chkCopySortOrder.Checked },
+                AsyncArgument = new object[] { sourceView, targetViews, chkCopyLayout.Checked, chkCopySortOrder.Checked, chkCopyComponentsConfig.Checked },
                 Work = (bw, evt) =>
                 {
                     var args = (object[])evt.Argument;
-                    evt.Result = ViewHelper.PropagateLayout((ViewDefinition)args[0], (List<ViewDefinition>)args[1], (bool)args[2], (bool)args[3], Service);
+                    evt.Result = ViewHelper.PropagateLayout((ViewDefinition)args[0], (List<ViewDefinition>)args[1], (bool)args[2], (bool)args[3], (bool)args[4], Service);
                 },
                 PostWorkCallBack = evt =>
                 {
