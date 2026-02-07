@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.ServiceModel;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace MsCrmTools.ViewLayoutReplicator.Forms
@@ -12,6 +13,9 @@ namespace MsCrmTools.ViewLayoutReplicator.Forms
     public partial class SolutionPicker : Form
     {
         private readonly IOrganizationService innerService;
+        private List<ListViewItem> allSolutionsItems;
+
+        private Thread searchThread;
 
         public SolutionPicker(IOrganizationService service)
         {
@@ -21,6 +25,28 @@ namespace MsCrmTools.ViewLayoutReplicator.Forms
         }
 
         public List<Entity> SelectedSolution { get; set; }
+
+        public void SearchSolutions(object search)
+        {
+            Thread.Sleep(500);
+            Invoke(new Action(() =>
+            {
+                lstSolutions.Items.Clear();
+                if (string.IsNullOrEmpty(search.ToString()))
+                {
+                    lstSolutions.Items.AddRange(allSolutionsItems
+                        .Where(i => ((Entity)i.Tag).GetAttributeValue<bool>("ismanaged") == false && !chShowManaged.Checked || chShowManaged.Checked)
+                        .ToArray());
+                }
+                else
+                {
+                    lstSolutions.Items.AddRange(allSolutionsItems
+                        .Where(i => i.Text.IndexOf(search.ToString(), StringComparison.InvariantCultureIgnoreCase) >= 0)
+                              .Where(i => ((Entity)i.Tag).GetAttributeValue<bool>("ismanaged") == false && !chShowManaged.Checked || chShowManaged.Checked)
+                  .ToArray());
+                }
+            }));
+        }
 
         private void btnSolutionPickerCancel_Click(object sender, EventArgs e)
         {
@@ -41,6 +67,11 @@ namespace MsCrmTools.ViewLayoutReplicator.Forms
             {
                 MessageBox.Show(this, "Please select at least one solution!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
+        }
+
+        private void chShowManaged_CheckedChanged(object sender, EventArgs e)
+        {
+            txtSearch_TextChanged(txtSearch, e);
         }
 
         private void lstSolutions_ColumnClick(object sender, ColumnClickEventArgs e)
@@ -64,7 +95,7 @@ namespace MsCrmTools.ViewLayoutReplicator.Forms
                 qe.ColumnSet = new ColumnSet(true);
                 qe.Criteria = new FilterExpression();
                 qe.Criteria.AddCondition(new ConditionExpression("isvisible", ConditionOperator.Equal, true));
-                qe.Criteria.AddCondition(new ConditionExpression("uniquename", ConditionOperator.NotEqual, "Default"));
+                // qe.Criteria.AddCondition(new ConditionExpression("uniquename", ConditionOperator.NotEqual, "Default"));
 
                 return innerService.RetrieveMultiple(qe);
             }
@@ -89,6 +120,13 @@ namespace MsCrmTools.ViewLayoutReplicator.Forms
             worker.RunWorkerAsync();
         }
 
+        private void txtSearch_TextChanged(object sender, EventArgs e)
+        {
+            searchThread?.Abort();
+            searchThread = new Thread(SearchSolutions);
+            searchThread.Start(txtSearch.Text);
+        }
+
         private void worker_DoWork(object sender, DoWorkEventArgs e)
         {
             e.Result = RetrieveSolutions();
@@ -96,6 +134,8 @@ namespace MsCrmTools.ViewLayoutReplicator.Forms
 
         private void worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            allSolutionsItems = new List<ListViewItem>();
+
             foreach (Entity solution in ((EntityCollection)e.Result).Entities)
             {
                 ListViewItem item = new ListViewItem(solution["friendlyname"].ToString());
@@ -103,11 +143,13 @@ namespace MsCrmTools.ViewLayoutReplicator.Forms
                 item.SubItems.Add(((EntityReference)solution["publisherid"]).Name);
                 item.Tag = solution;
 
-                lstSolutions.Items.Add(item);
+                allSolutionsItems.Add(item);
             }
 
             lstSolutions.Enabled = true;
             btnSolutionPickerValidate.Enabled = true;
+
+            SearchSolutions(txtSearch.Text);
         }
     }
 }

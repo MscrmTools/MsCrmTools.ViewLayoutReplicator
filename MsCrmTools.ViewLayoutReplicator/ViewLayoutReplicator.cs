@@ -136,23 +136,10 @@ namespace MsCrmTools.ViewLayoutReplicator
             }
 
             var sb = new StringBuilder();
-            if (targetViews.Any(tv => tv.Type == ViewHelper.VIEW_SEARCH))
-            {
-                sb.AppendLine("You selected Lookup View as a target.");
-                sb.AppendLine("Please notice that the layout of a Lookup view should be the primary field of the table to avoid strange behavior when working with lookups.");
-                sb.AppendLine();
-                sb.AppendLine("Are your sure you want to update all selected view(s), including the Lookup view?");
-                if (DialogResult.No ==
-                    MessageBox.Show(this, sb.ToString(), "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
-                {
-                    return;
-                }
-            }
-
-            sb = new StringBuilder();
             sb.AppendLine("The selected target views will:");
             sb.AppendLine($"- {(chkCopyLayout.Checked ? "" : "NOT ")}be updated with the layout of the source view");
             sb.AppendLine($"- {(chkCopySortOrder.Checked ? "" : "NOT ")}be updated with the sort order of the source view");
+            sb.AppendLine($"- {(chkCopyComponentsConfig.Checked ? "" : "NOT ")}be updated with components configuration");
             sb.AppendLine();
             sb.AppendLine("Are your sure you want to update all selected view(s) ?");
             if (DialogResult.No ==
@@ -164,7 +151,7 @@ namespace MsCrmTools.ViewLayoutReplicator
             tsbPublishEntity.Enabled = false;
             tsbPublishAll.Enabled = false;
             tsbSaveViews.Enabled = false;
-            tssbLoadAllEntities.Enabled = false;
+            tssbLoadTables.Enabled = false;
             tsbSaveAndPublish.Enabled = false;
 
             WorkAsync(new WorkAsyncInfo
@@ -191,7 +178,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                     tsbPublishEntity.Enabled = true;
                     tsbPublishAll.Enabled = true;
                     tsbSaveViews.Enabled = true;
-                    tssbLoadAllEntities.Enabled = true;
+                    tssbLoadTables.Enabled = true;
                     tsbSaveAndPublish.Enabled = true;
                 }
             });
@@ -213,7 +200,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                 tsbPublishEntity.Enabled = false;
                 tsbPublishAll.Enabled = false;
                 tsbSaveViews.Enabled = false;
-                tssbLoadAllEntities.Enabled = false;
+                tssbLoadTables.Enabled = false;
                 tsbSaveAndPublish.Enabled = false;
 
                 WorkAsync(new WorkAsyncInfo
@@ -245,7 +232,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                         tsbPublishEntity.Enabled = true;
                         tsbPublishAll.Enabled = true;
                         tsbSaveViews.Enabled = true;
-                        tssbLoadAllEntities.Enabled = true;
+                        tssbLoadTables.Enabled = true;
                         tsbSaveAndPublish.Enabled = true;
                     }
                 });
@@ -619,7 +606,7 @@ namespace MsCrmTools.ViewLayoutReplicator
             tsbPublishEntity.Enabled = false;
             tsbPublishAll.Enabled = false;
             tsbSaveViews.Enabled = false;
-            tssbLoadAllEntities.Enabled = false;
+            tssbLoadTables.Enabled = false;
             tsbSaveAndPublish.Enabled = false;
 
             WorkAsync(new WorkAsyncInfo
@@ -643,7 +630,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                     tsbPublishEntity.Enabled = true;
                     tsbPublishAll.Enabled = true;
                     tsbSaveViews.Enabled = true;
-                    tssbLoadAllEntities.Enabled = true;
+                    tssbLoadTables.Enabled = true;
                     tsbSaveAndPublish.Enabled = true;
                 }
             });
@@ -654,16 +641,16 @@ namespace MsCrmTools.ViewLayoutReplicator
             SaveViews(true);
         }
 
-        private void tssbLoadAllEntities_ButtonClick(object sender, EventArgs e)
+        private void tssbLoadTablesFromSolution_ButtonClick(object sender, EventArgs e)
         {
-            LoadEntities();
+            LoadEntities(true);
         }
 
-        private void tssbLoadAllEntities_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        private void tssbLoadTablesFromSolution_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            if (e.ClickedItem == tsmiLoadFromSolution)
+            if (e.ClickedItem == tsmiLoadAllTables)
             {
-                LoadEntities(true);
+                LoadEntities();
             }
         }
     }

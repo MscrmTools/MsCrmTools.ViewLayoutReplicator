@@ -42,14 +42,15 @@
             this.viewType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.pnlTargetViewsOptions = new System.Windows.Forms.Panel();
+            this.chkCopyComponentsConfig = new System.Windows.Forms.CheckBox();
             this.llClearSelection = new System.Windows.Forms.LinkLabel();
             this.chkCopySortOrder = new System.Windows.Forms.CheckBox();
             this.chkCopyLayout = new System.Windows.Forms.CheckBox();
             this.chkShowUser = new System.Windows.Forms.CheckBox();
             this.chkShowSystem = new System.Windows.Forms.CheckBox();
             this.tsMain = new System.Windows.Forms.ToolStrip();
-            this.tssbLoadAllEntities = new System.Windows.Forms.ToolStripSplitButton();
-            this.tsmiLoadFromSolution = new System.Windows.Forms.ToolStripMenuItem();
+            this.tssbLoadTables = new System.Windows.Forms.ToolStripSplitButton();
+            this.tsmiLoadAllTables = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbSaveViews = new System.Windows.Forms.ToolStripButton();
             this.tsbPublishEntity = new System.Windows.Forms.ToolStripButton();
@@ -64,7 +65,6 @@
             this.allViewName = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.allViewType = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.lvSourceViewLayoutPreview = new System.Windows.Forms.ListView();
-            this.chkCopyComponentsConfig = new System.Windows.Forms.CheckBox();
             this.gbEntities.SuspendLayout();
             this.gbTargetViews.SuspendLayout();
             this.pnlTargetViewsOptions.SuspendLayout();
@@ -88,9 +88,9 @@
             this.gbEntities.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbEntities.Enabled = false;
             this.gbEntities.Location = new System.Drawing.Point(0, 0);
-            this.gbEntities.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbEntities.Margin = new System.Windows.Forms.Padding(4);
             this.gbEntities.Name = "gbEntities";
-            this.gbEntities.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbEntities.Padding = new System.Windows.Forms.Padding(4);
             this.gbEntities.Size = new System.Drawing.Size(570, 1011);
             this.gbEntities.TabIndex = 89;
             this.gbEntities.TabStop = false;
@@ -111,7 +111,7 @@
             this.txtSearchEntity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txtSearchEntity.Location = new System.Drawing.Point(75, 20);
-            this.txtSearchEntity.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtSearchEntity.Margin = new System.Windows.Forms.Padding(4);
             this.txtSearchEntity.Name = "txtSearchEntity";
             this.txtSearchEntity.Size = new System.Drawing.Size(486, 22);
             this.txtSearchEntity.TabIndex = 80;
@@ -128,7 +128,7 @@
             this.lvEntities.FullRowSelect = true;
             this.lvEntities.HideSelection = false;
             this.lvEntities.Location = new System.Drawing.Point(8, 52);
-            this.lvEntities.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lvEntities.Margin = new System.Windows.Forms.Padding(4);
             this.lvEntities.Name = "lvEntities";
             this.lvEntities.Size = new System.Drawing.Size(552, 955);
             this.lvEntities.Sorting = System.Windows.Forms.SortOrder.Ascending;
@@ -155,9 +155,9 @@
             this.gbTargetViews.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbTargetViews.Enabled = false;
             this.gbTargetViews.Location = new System.Drawing.Point(0, 0);
-            this.gbTargetViews.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbTargetViews.Margin = new System.Windows.Forms.Padding(4);
             this.gbTargetViews.Name = "gbTargetViews";
-            this.gbTargetViews.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbTargetViews.Padding = new System.Windows.Forms.Padding(4);
             this.gbTargetViews.Size = new System.Drawing.Size(1147, 549);
             this.gbTargetViews.TabIndex = 87;
             this.gbTargetViews.TabStop = false;
@@ -172,7 +172,7 @@
             this.lvTargetViews.Dock = System.Windows.Forms.DockStyle.Fill;
             this.lvTargetViews.HideSelection = false;
             this.lvTargetViews.Location = new System.Drawing.Point(4, 50);
-            this.lvTargetViews.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lvTargetViews.Margin = new System.Windows.Forms.Padding(4);
             this.lvTargetViews.Name = "lvTargetViews";
             this.lvTargetViews.Size = new System.Drawing.Size(1139, 495);
             this.lvTargetViews.SmallImageList = this.imageList1;
@@ -218,6 +218,19 @@
             this.pnlTargetViewsOptions.Name = "pnlTargetViewsOptions";
             this.pnlTargetViewsOptions.Size = new System.Drawing.Size(1139, 31);
             this.pnlTargetViewsOptions.TabIndex = 79;
+            // 
+            // chkCopyComponentsConfig
+            // 
+            this.chkCopyComponentsConfig.Checked = true;
+            this.chkCopyComponentsConfig.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkCopyComponentsConfig.Dock = System.Windows.Forms.DockStyle.Left;
+            this.chkCopyComponentsConfig.Location = new System.Drawing.Point(629, 0);
+            this.chkCopyComponentsConfig.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.chkCopyComponentsConfig.Name = "chkCopyComponentsConfig";
+            this.chkCopyComponentsConfig.Size = new System.Drawing.Size(254, 31);
+            this.chkCopyComponentsConfig.TabIndex = 5;
+            this.chkCopyComponentsConfig.Text = "Copy Components configuration";
+            this.chkCopyComponentsConfig.UseVisualStyleBackColor = true;
             // 
             // llClearSelection
             // 
@@ -289,7 +302,7 @@
             // 
             this.tsMain.ImageScalingSize = new System.Drawing.Size(32, 32);
             this.tsMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tssbLoadAllEntities,
+            this.tssbLoadTables,
             this.toolStripSeparator1,
             this.tsbSaveViews,
             this.tsbPublishEntity,
@@ -302,24 +315,24 @@
             this.tsMain.TabIndex = 85;
             this.tsMain.Text = "tsMain";
             // 
-            // tssbLoadAllEntities
+            // tssbLoadTables
             // 
-            this.tssbLoadAllEntities.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmiLoadFromSolution});
-            this.tssbLoadAllEntities.Image = global::MsCrmTools.ViewLayoutReplicator.Properties.Resources.Dataverse_32x32;
-            this.tssbLoadAllEntities.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tssbLoadAllEntities.Name = "tssbLoadAllEntities";
-            this.tssbLoadAllEntities.Size = new System.Drawing.Size(138, 36);
-            this.tssbLoadAllEntities.Text = "Load Tables";
-            this.tssbLoadAllEntities.ButtonClick += new System.EventHandler(this.tssbLoadAllEntities_ButtonClick);
-            this.tssbLoadAllEntities.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tssbLoadAllEntities_DropDownItemClicked);
+            this.tssbLoadTables.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.tsmiLoadAllTables});
+            this.tssbLoadTables.Image = global::MsCrmTools.ViewLayoutReplicator.Properties.Resources.Dataverse_32x32;
+            this.tssbLoadTables.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tssbLoadTables.Name = "tssbLoadTables";
+            this.tssbLoadTables.Size = new System.Drawing.Size(231, 36);
+            this.tssbLoadTables.Text = "Load Tables from solution";
+            this.tssbLoadTables.ButtonClick += new System.EventHandler(this.tssbLoadTablesFromSolution_ButtonClick);
+            this.tssbLoadTables.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.tssbLoadTablesFromSolution_DropDownItemClicked);
             // 
-            // tsmiLoadFromSolution
+            // tsmiLoadAllTables
             // 
-            this.tsmiLoadFromSolution.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            this.tsmiLoadFromSolution.Name = "tsmiLoadFromSolution";
-            this.tsmiLoadFromSolution.Size = new System.Drawing.Size(263, 26);
-            this.tsmiLoadFromSolution.Text = "Load Tables from solution";
+            this.tsmiLoadAllTables.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.tsmiLoadAllTables.Name = "tsmiLoadAllTables";
+            this.tsmiLoadAllTables.Size = new System.Drawing.Size(224, 26);
+            this.tsmiLoadAllTables.Text = "Load all tables";
             // 
             // toolStripSeparator1
             // 
@@ -421,9 +434,9 @@
             this.gbSourceViews.Dock = System.Windows.Forms.DockStyle.Fill;
             this.gbSourceViews.Enabled = false;
             this.gbSourceViews.Location = new System.Drawing.Point(0, 0);
-            this.gbSourceViews.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbSourceViews.Margin = new System.Windows.Forms.Padding(4);
             this.gbSourceViews.Name = "gbSourceViews";
-            this.gbSourceViews.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.gbSourceViews.Padding = new System.Windows.Forms.Padding(4);
             this.gbSourceViews.Size = new System.Drawing.Size(1147, 458);
             this.gbSourceViews.TabIndex = 89;
             this.gbSourceViews.TabStop = false;
@@ -438,7 +451,7 @@
             this.lvSourceViews.FullRowSelect = true;
             this.lvSourceViews.HideSelection = false;
             this.lvSourceViews.Location = new System.Drawing.Point(4, 19);
-            this.lvSourceViews.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lvSourceViews.Margin = new System.Windows.Forms.Padding(4);
             this.lvSourceViews.Name = "lvSourceViews";
             this.lvSourceViews.Size = new System.Drawing.Size(1139, 353);
             this.lvSourceViews.SmallImageList = this.imageList1;
@@ -466,25 +479,12 @@
             this.lvSourceViewLayoutPreview.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.lvSourceViewLayoutPreview.HideSelection = false;
             this.lvSourceViewLayoutPreview.Location = new System.Drawing.Point(4, 372);
-            this.lvSourceViewLayoutPreview.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.lvSourceViewLayoutPreview.Margin = new System.Windows.Forms.Padding(4);
             this.lvSourceViewLayoutPreview.Name = "lvSourceViewLayoutPreview";
             this.lvSourceViewLayoutPreview.Size = new System.Drawing.Size(1139, 82);
             this.lvSourceViewLayoutPreview.TabIndex = 67;
             this.lvSourceViewLayoutPreview.UseCompatibleStateImageBehavior = false;
             this.lvSourceViewLayoutPreview.View = System.Windows.Forms.View.Details;
-            // 
-            // chkCopyComponentsConfig
-            // 
-            this.chkCopyComponentsConfig.Checked = true;
-            this.chkCopyComponentsConfig.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkCopyComponentsConfig.Dock = System.Windows.Forms.DockStyle.Left;
-            this.chkCopyComponentsConfig.Location = new System.Drawing.Point(629, 0);
-            this.chkCopyComponentsConfig.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.chkCopyComponentsConfig.Name = "chkCopyComponentsConfig";
-            this.chkCopyComponentsConfig.Size = new System.Drawing.Size(254, 31);
-            this.chkCopyComponentsConfig.TabIndex = 5;
-            this.chkCopyComponentsConfig.Text = "Copy Components configuration";
-            this.chkCopyComponentsConfig.UseVisualStyleBackColor = true;
             // 
             // ViewLayoutReplicator
             // 
@@ -492,7 +492,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.tsMain);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ViewLayoutReplicator";
             this.Size = new System.Drawing.Size(1721, 1050);
             this.gbEntities.ResumeLayout(false);
@@ -547,8 +547,8 @@
         private System.Windows.Forms.CheckBox chkShowSystem;
         private System.Windows.Forms.CheckBox chkCopySortOrder;
         private System.Windows.Forms.CheckBox chkCopyLayout;
-        private System.Windows.Forms.ToolStripSplitButton tssbLoadAllEntities;
-        private System.Windows.Forms.ToolStripMenuItem tsmiLoadFromSolution;
+        private System.Windows.Forms.ToolStripSplitButton tssbLoadTables;
+        private System.Windows.Forms.ToolStripMenuItem tsmiLoadAllTables;
         private System.Windows.Forms.ToolStripButton tsbSaveAndPublish;
         private System.Windows.Forms.LinkLabel llClearSelection;
         private System.Windows.Forms.CheckBox chkCopyComponentsConfig;
