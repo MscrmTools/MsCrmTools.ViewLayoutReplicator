@@ -6,6 +6,7 @@
 using Microsoft.Crm.Sdk.Messages;
 using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Metadata;
+using Microsoft.Xrm.Sdk.Query;
 using MsCrmTools.ViewLayoutReplicator.Forms;
 using MsCrmTools.ViewLayoutReplicator.Helpers;
 using System;
@@ -26,6 +27,7 @@ namespace MsCrmTools.ViewLayoutReplicator
     {
         private List<EntityMetadata> entitiesCache;
         private ListViewItem[] listViewItemsCache;
+        private Guid solutionId = Guid.Empty;
         private List<ListViewItem> sourceViewsItems;
         private List<ListViewItem> targetViewsItems;
 
@@ -47,7 +49,6 @@ namespace MsCrmTools.ViewLayoutReplicator
 
         private void LoadEntities(bool fromSolution = false)
         {
-            Guid solutionId = Guid.Empty;
             if (fromSolution)
             {
                 using (var dialog = new SolutionPicker(Service))
@@ -61,6 +62,10 @@ namespace MsCrmTools.ViewLayoutReplicator
                         return;
                     }
                 }
+            }
+            else
+            {
+                solutionId = Guid.Empty;
             }
 
             txtSearchEntity.Text = string.Empty;
@@ -97,7 +102,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                         var list = new List<ListViewItem>();
                         foreach (EntityMetadata emd in (List<EntityMetadata>)e.Result)
                         {
-                            var item = new ListViewItem { Text = emd.DisplayName.UserLocalizedLabel?.Label ?? "N/A", Tag = emd.LogicalName };
+                            var item = new ListViewItem { Text = emd.DisplayName.UserLocalizedLabel?.Label ?? "N/A", Tag = emd };
                             item.SubItems.Add(emd.LogicalName);
                             list.Add(item);
                         }
@@ -109,6 +114,8 @@ namespace MsCrmTools.ViewLayoutReplicator
                         tsbPublishEntity.Enabled = true;
                         tsbPublishAll.Enabled = true;
                         tsbSaveViews.Enabled = true;
+
+                        btnSelectFromSolution.Visible = fromSolution;
                     }
                 }
             });
@@ -249,10 +256,10 @@ namespace MsCrmTools.ViewLayoutReplicator
 
         private void BwFillViewsDoWork(object sender, DoWorkEventArgs e)
         {
-            string entityLogicalName = e.Argument.ToString();
+            var emd = (EntityMetadata)e.Argument;
 
-            List<Entity> viewsList = ViewHelper.RetrieveViews(entityLogicalName, entitiesCache, Service);
-            viewsList.AddRange(ViewHelper.RetrieveUserViews(entityLogicalName, entitiesCache, Service));
+            List<Entity> viewsList = ViewHelper.RetrieveViews(emd.LogicalName, entitiesCache, Service);
+            viewsList.AddRange(ViewHelper.RetrieveUserViews(emd.LogicalName, entitiesCache, Service));
 
             sourceViewsItems = new List<ListViewItem>();
             targetViewsItems = new List<ListViewItem>();
@@ -345,6 +352,22 @@ namespace MsCrmTools.ViewLayoutReplicator
 
                     targetViewsItems.Add(clonedItem);
                 }
+
+                var component = Service.RetrieveMultiple(new QueryExpression("solutioncomponent")
+                {
+                    ColumnSet = new ColumnSet("objectid", "rootcomponentbehavior"),
+                    Criteria = new FilterExpression
+                    {
+                        Conditions =
+                        {
+                            new ConditionExpression("componenttype", ConditionOperator.Equal, 1), // Table
+                            new ConditionExpression("objectid", ConditionOperator.Equal, emd.MetadataId.Value),
+                            new ConditionExpression("solutionid", ConditionOperator.Equal, solutionId)
+                        }
+                    },
+                }).Entities.FirstOrDefault();
+
+                e.Result = component?.GetAttributeValue<OptionSetValue>("rootcomponentbehavior").Value != 0;
             }
         }
 
@@ -370,13 +393,15 @@ namespace MsCrmTools.ViewLayoutReplicator
 
             lvSourceViews.Items.AddRange(sourceViewsItems.ToArray());
             lvTargetViews.Items.AddRange(targetViewsItems.ToArray());
+
+            btnSelectFromSolution.Visible = (bool)e.Result;
         }
 
         private void lvEntities_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvEntities.SelectedItems.Count > 0)
             {
-                string entityLogicalName = lvEntities.SelectedItems[0].Tag.ToString();
+                var emd = (EntityMetadata)lvEntities.SelectedItems[0].Tag;
 
                 // Reinit other controls
                 lvSourceViews.Items.Clear();
@@ -388,7 +413,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                 // Launch treatment
                 var bwFillViews = new BackgroundWorker();
                 bwFillViews.DoWork += BwFillViewsDoWork;
-                bwFillViews.RunWorkerAsync(entityLogicalName);
+                bwFillViews.RunWorkerAsync(emd);
                 bwFillViews.RunWorkerCompleted += BwFillViewsRunWorkerCompleted;
             }
         }
@@ -530,6 +555,32 @@ namespace MsCrmTools.ViewLayoutReplicator
 
         public string UserName
         { get { return "MscrmTools"; } }
+
+        private void btnSelectFromSolution_Click(object sender, EventArgs e)
+        {
+            var table = ((EntityMetadata)lvEntities.SelectedItems[0].Tag).LogicalName;
+
+            var components = Service.RetrieveMultiple(new QueryExpression("solutioncomponent")
+            {
+                ColumnSet = new ColumnSet("objectid"),
+                Criteria = new FilterExpression
+                {
+                    Conditions =
+                    {
+                        new ConditionExpression("componenttype", ConditionOperator.Equal, 26), // View
+                        new ConditionExpression("objectid", ConditionOperator.In, lvTargetViews.Items.Cast<ListViewItem>().Select(i =>  ((Entity)i.Tag).Id).ToArray()),
+                        new ConditionExpression("solutionid", ConditionOperator.Equal, solutionId)
+                    }
+                },
+            }).Entities.ToList();
+
+            var ids = components.Select(c => c.GetAttributeValue<Guid>("objectid")).ToList();
+
+            foreach (ListViewItem item in lvTargetViews.Items)
+            {
+                item.Checked = ids.Contains(((Entity)item.Tag).Id);
+            }
+        }
 
         private void chkShowSystem_CheckedChanged(object sender, EventArgs e)
         {
