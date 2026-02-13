@@ -213,7 +213,7 @@ namespace MsCrmTools.ViewLayoutReplicator
                 WorkAsync(new WorkAsyncInfo
                 {
                     Message = "Publishing table...",
-                    AsyncArgument = lvEntities.SelectedItems[0].Tag,
+                    AsyncArgument = ((EntityMetadata)lvEntities.SelectedItems[0].Tag).LogicalName,
                     Work = (bw, evt) =>
                     {
                         var pubRequest = new PublishXmlRequest();
